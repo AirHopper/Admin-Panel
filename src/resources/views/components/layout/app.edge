@@ -5,21 +5,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+  {{-- font --}}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
     rel="stylesheet" />
 
+  {{-- talwind and apline --}}
   <link rel="stylesheet" href="/css/app.css">
   <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 
-<body>
-  <div class="flex flex-row w-full h-screen">
+<body class="font-family-karla h-screen relative font-['Nunito']">
+  <div class=" flex flex-row w-full h-screen">
 
     @include('components/ui/sidebar')
-    <div class="bg-gray-500 w-full">
-      {{{ await $slots.main() }}}
+    <div class="bg-gray-500 w-full flex flex-col">
+      <div class="p-6 w-full bg-white">
+        <!-- Content Head -->
+        <h1>{{title}}</h1>
+      </div>
+      <div class="p-4">
+        {{{ await $slots.main() }}}
+      </div>
     </div>
   </div>
 </body>
