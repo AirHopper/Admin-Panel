@@ -1,10 +1,86 @@
-@layout.app({ title: "Flights List Page" })
+@layout.app({ title: "Flights List" })
 @slot('main')
 
-<div class="p-6 w-full bg-white">
+<div class="p-6 w-full bg-white rounded-lg">
     <!-- Content Head -->
-    <h1>Ini Flights List Page</h1>
+    <div class="flex justify-end items-center mb-2">
+        @component('components/ui/modal', {
+            title: 'Add Flights',
+            buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
+            })
+            @slot('header')
+                Add Flights
+            @end
+            @slot('content')
+                <h1>Ini Flights List Page</h1>
+            @end
+        @end
+    </div>
+
+<div class="border-2 rounded-lg p-4 overflow-x-auto">
+    <table class="myTable display" style="width:100%">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Class</th>
+                <th>Airline</th>
+                <th>Departure City</th>
+                <th>Departure Time</th>
+                <th>Arrival City</th>
+                <th>Arrival Time</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            @each((data, index) in flights)
+                <tr>
+                    <td>{{ index + 1 }}</td>
+                    <td>
+                        @if(data.class == 'Economy')    
+                            <span class="bg-green-300 text-green-800 px-2 py-1 rounded-lg">
+                                {{ data.class }}
+                            </span>
+                        @elseif(data.class == 'Premium_Economy')
+                            <span class="bg-blue-300 text-blue-800 px-2 py-1 rounded-lg">
+                                {{ data.class }}
+                            </span>
+                        @elseif(data.class == 'Business')
+                            <span class="bg-red-300 text-red-800 px-2 py-1 rounded-lg">
+                                {{ data.class }}
+                            </span>
+                        @else
+                            <span class="bg-purple-300 text-purple-800 px-2 py-1 rounded-lg">
+                                {{ data.class }}
+                            </span>
+                        @endif
+                    </td>
+                    <td>{{ data.airline }}</td>
+                    <td>{{ data.departure.city.name }}</td>
+                    <td>{{ data.departure.time }}</td>
+                    <td>{{ data.arrival.city.name }}</td>
+                    <td>{{ data.arrival.time }}</td>
+                    <td>
+                        <div class="flex flex-row gap-x-2">
+                            <a href="/admin/flight/{{ data.id }}" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-300 text-green-800 hover:bg-green-400 focus:outline-none focus:bg-green-200 disabled:opacity-50 disabled:pointer-events-none">
+                                Detail
+                            </a>
+                            <a href="#" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none">
+                                Edit
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            @else
+                <tr>
+                    <td colspan="7" class="text-center">No data available</td>
+                </tr>
+            @end
+        </tbody>
+        
+    </table>
 </div>
+</div>
+
 
 @endslot
 @end
