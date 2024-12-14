@@ -3,7 +3,43 @@
 
 <div class="p-6 w-full bg-white">
     <!-- Content Head -->
-    <h1>Ini Airlines List Page</h1>
+    <div class="flex justify-end items-center mb-2">
+        <button type="button" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">
+            Button
+          </button>
+    </div>
+    
+    <div class="border-2 rounded-lg p-4 overflow-x-auto">
+        <table class="myTable display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>IATA Code</th>
+                    <th>Icon</th>
+                    <th>Name</th>
+                    <th>Total Airplane</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @each((airline, index) in airlines)
+                    <tr>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ airline.iataCode }}</td>
+                        <td><img src="{{ airline.imageUrl }}" class="w-16" alt=""></td>
+                        <td>{{ airline.name }}</td>
+                        <td>---</td>
+                        <td>
+                            {{--  <a href="{{ api }}/airlines/{{ airline.id }}/edit" class="btn btn-primary">Edit</a>  --}}
+                            <button type="button" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none">
+                                Edit
+                              </button>
+                        </td>
+                    </tr>
+                @end
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @endslot
