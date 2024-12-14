@@ -1,7 +1,7 @@
 <div x-data="{ modalOpen: false }" @keydown.escape.window="modalOpen = false" class="relative z-50 w-auto h-auto">
     <button @click="modalOpen=true"
         class="px-4 py-1 rounded-md duration-300 transition-all ease-in-out hover:text-gray-200 shadow-lg font-semibold text-md flex flex-row gap-2 {{ buttonClass }}">
-        {{{ await $slots.main() }}}
+        {{{ await $slots.header() }}}
     </button>
     <template x-teleport="body">
         <div x-show="modalOpen" class="fixed top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen"
@@ -28,7 +28,7 @@
                     </button>
                 </div>
                 <div class="relative w-auto">
-                    <p>This is placeholder text. Replace it with your own content.</p>
+                    {{{ await $slots.content() }}}
                 </div>
             </div>
         </div>
