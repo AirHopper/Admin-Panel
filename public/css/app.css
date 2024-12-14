@@ -770,12 +770,24 @@ video {
   min-width: 240px;
 }
 
+.min-w-\[200px\] {
+  min-width: 200px;
+}
+
 .max-w-\[20rem\] {
   max-width: 20rem;
 }
 
 .max-w-sm {
   max-width: 24rem;
+}
+
+.max-w-\[10rem\] {
+  max-width: 10rem;
+}
+
+.max-w-\[14rem\] {
+  max-width: 14rem;
 }
 
 .flex-grow {
