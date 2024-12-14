@@ -12,3 +12,22 @@ export const index = async (req, res, next) => {
     next(error);
   }
 };
+
+export const listAirplanes = async (req, res, next) => {
+  try {
+    const api = process.env.API_URL;
+    const id = req.params.id;
+
+    const airplanesResponse = await axios.get(`${api}/api/v1/airplanes`);
+
+    const data = {
+      api: api,
+      airplanes: airplanesResponse.data.data,
+    };
+
+    res.edge("pages/airline/listAirplanes", data);
+  } catch (error) {
+    next(error);
+  }
+};
+

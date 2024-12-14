@@ -8,6 +8,7 @@ export const index = async (req, res, next) => {
     const airportsResponse = await axios.get(`${api}/api/v1/airports`);
 
     const data = {
+      api: api,
       cities: citiesResponse.data.data || [],
       airports: airportsResponse.data.data || [],
     };

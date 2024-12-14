@@ -1,18 +1,26 @@
-@layout.app({ title: "Airlines List" })
+@layout.app({ title: "Airplanes List" })
 @slot('main')
 
 <div class="p-6 w-full bg-white rounded-lg">
     <!-- Content Head -->
-    <div class="flex justify-end items-center mb-2">
+    <div class="flex justify-between items-center mb-2">
+        {{--  Ini Logi Maskapai  --}}
+        <div class="flex items-center gap-x-2">
+            <a href="/admin/airline" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">Back</a>
+            <div class="flex items-center gap-x-2">
+                <img src="/images/airhopper.jpg" class="rounded-xl w-10" alt="" srcset="" />
+                <span class="text-sm font-medium">Airline Name</span>
+            </div>
+        </div>
         @component('components/ui/modal', {
-            title: 'Add Airlines',
+            title: 'Add Airplane',
             buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
             })
             @slot('header')
-                Add Airlines
+                Add Airplane
             @end
             @slot('content')
-            <h1>Ini Modal Add Airlines</h1>
+            <h1>Ini Modal Add Airplane</h1>
             @end
         @end
     </div>
@@ -22,21 +30,20 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>IATA Code</th>
-                    <th>Icon</th>
                     <th>Name</th>
-                    <th>Total Airplane</th>
+                    <th>Type</th>
+                    <th>Price Per KM</th>
+                    <th>Total Flights</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody class="text-center">
-                @each((airline, index) in airlines)
+                @each((data, index) in airplanes)
                     <tr>
                         <td>{{ index + 1 }}</td>
-                        <td>{{ airline.iataCode }}</td>
-                        <td><img src="{{ airline.imageUrl }}" class="w-16" alt=""></td>
-                        {{--  <td><a href="/admin/airlines/{{ airline.id }}/airplanes">{{ airline.name }}</a></td>  --}}
-                        <td><a href="/admin/airline/1/airplanes" class="text-blue-600 hover:text-blue-800 hover:underline">{{ airline.name }}</a></td>
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.type }}</td>
+                        <td>{{ data.pricePerKm }}</td>
                         <td>---</td>
                         <td>
                             {{--  <a href="{{ api }}/airlines/{{ airline.id }}/edit" class="btn btn-primary">Edit</a>  --}}

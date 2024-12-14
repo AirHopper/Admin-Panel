@@ -1,7 +1,7 @@
 @layout.app({ title: "Airport List Page" })
 @slot('main')
 
-<div class="p-6 w-full bg-white">
+<div class="p-6 w-full bg-white rounded-lg">
     <!-- Content Head -->
     <div class="flex justify-end items-center mb-2">
           @component('components/ui/modal', {
@@ -51,7 +51,6 @@
                 </div>
                 <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
             </form>
-
             @end
         @end
     </div>
