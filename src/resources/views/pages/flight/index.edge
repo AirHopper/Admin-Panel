@@ -37,19 +37,19 @@
                         <td>{{ index + 1 }}</td>
                         <td>
                             @if(data.class == 'Economy')    
-                                <span class="bg-green-300 text-green-800 px-2 py-1 rounded-lg">
+                                <span class="bg-green-300 text-green-800 px-2 py-1 rounded-lg text-sm">
                                     {{ data.class }}
                                 </span>
                             @elseif(data.class == 'Premium_Economy')
-                                <span class="bg-blue-300 text-blue-800 px-2 py-1 rounded-lg">
+                                <span class="bg-blue-300 text-blue-800 px-2 py-1 rounded-lg text-sm">
                                     {{ data.class }}
                                 </span>
                             @elseif(data.class == 'Business')
-                                <span class="bg-red-300 text-red-800 px-2 py-1 rounded-lg">
+                                <span class="bg-red-300 text-red-800 px-2 py-1 rounded-lg text-sm">
                                     {{ data.class }}
                                 </span>
                             @else
-                                <span class="bg-purple-300 text-purple-800 px-2 py-1 rounded-lg">
+                                <span class="bg-purple-300 text-purple-800 px-2 py-1 rounded-lg text-sm">
                                     {{ data.class }}
                                 </span>
                             @endif
@@ -61,10 +61,10 @@
                         <td>{{ data.arrival.time }}</td>
                         <td>
                             <div class="flex flex-row gap-x-2">
-                                <a href="/admin/flight/{{ data.id }}" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-300 text-green-800 hover:bg-green-400 focus:outline-none focus:bg-green-200 disabled:opacity-50 disabled:pointer-events-none">
+                                <a href="/admin/flight/{{ data.id }}" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-transparent bg-green-300 text-green-800 hover:bg-green-400 focus:outline-none focus:bg-green-200 disabled:opacity-50 disabled:pointer-events-none">
                                     Detail
                                 </a>
-                                <a href="#" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none">
+                                <a href="#" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none">
                                     Edit
                                 </a>
                             </div>
