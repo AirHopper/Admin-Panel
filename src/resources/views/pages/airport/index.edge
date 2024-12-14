@@ -45,7 +45,7 @@
                     <select id="city" name="city" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="" selected>Choose a City</option>
                         @each(city in cities)
-                            <option value="{{ city.id }}">{{ city.name }}</option>
+                            <option value="{{ city.code }}">{{ city.name }}</option>
                         @end
                     </select>
                 </div>
@@ -93,6 +93,52 @@
         </table>
     </div>
 </div>
+
+<script>
+    // const api = "{{ api }}/api/v1/airports"
+    // console.log({api})
+
+    $(document).ready(function () {
+    $('#airportForm').on('submit', function (e) {
+        e.preventDefault(); // Mencegah reload halaman saat submit
+
+        // Ambil data dari form
+        const formData = {
+            iataCode: $('#iataCode').val(),
+            name: $('#name').val(),
+            latitude: parseFloat($('#latitude').val()), // Konversi ke float
+            longitude: parseFloat($('#longitude').val()), // Konversi ke float
+            type: $('#type').val(),
+            cityId: $('#city').val(),
+        };
+
+        $.ajax({
+            url: '{{ api }}/api/v1/airports',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                showToast("success", "Success", "Airport created successfully!");
+                window.location.reload();
+            },
+            error: function (xhr) {
+                // Tampilkan pesan error jika terjadi kesalahan
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorMessages = '';
+                    errors.forEach(error => {
+                        errorMessages += `${error.field}: ${error.message}\n`;
+                    });
+                    showToast("error", "Error", errorMessages);
+                } else {
+                    showToast("error", "Error", "An error occurred. Please try again.");
+                }
+            },
+        });
+    });
+});
+
+</script>
 
 @endslot
 @end
