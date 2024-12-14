@@ -4,9 +4,56 @@
 <div class="p-6 w-full bg-white">
     <!-- Content Head -->
     <div class="flex justify-end items-center mb-2">
-        <button type="button" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">
-            Add Airport
-          </button>
+          @component('components/ui/modal', {
+            title: 'Add Airport',
+            buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
+            })
+            @slot('header')
+                Add Airport
+            @end
+            @slot('content')
+            
+            <form id="airportForm" class="max-w-sm mx-auto">
+                <div class="mb-5">
+                    <label for="iataCode" class="block mb-2 text-sm font-medium text-gray-900">IATA Code</label>
+                    <input type="text" id="iataCode" name="iataCode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="JKT" required />
+                </div>
+                <div class="mb-5">
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Airport Name</label>
+                    <input type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Bandara Internasional Soekarno Hatta" required />
+                </div>
+                <div class="flex flex-row gap-2">
+                    <div class="mb-5 w-1/2">
+                        <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900">Longitude</label>
+                        <input type="text" id="longitude" name="longitude" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="106.8650" required />
+                    </div>
+                    <div class="mb-5 w-1/2">
+                        <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900">Latitude</label>
+                        <input type="text" id="latitude" name="latitude" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="106.8650" required />
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label for="type" class="block mb-2 text-sm font-medium text-gray-900">Select a type</label>
+                    <select id="type" name="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="" selected>Choose a Type</option>
+                        <option value="Domestik">Domestik</option>
+                        <option value="Internasional">Internasional</option>
+                    </select>
+                </div>
+                <div class="mb-5">
+                    <label for="city" class="block mb-2 text-sm font-medium text-gray-900">Select a City</label>
+                    <select id="city" name="city" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="" selected>Choose a City</option>
+                        @each(city in cities)
+                            <option value="{{ city.id }}">{{ city.name }}</option>
+                        @end
+                    </select>
+                </div>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
+            </form>
+
+            @end
+        @end
     </div>
 
     <div class="border-2 rounded-lg p-4 overflow-x-auto">

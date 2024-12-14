@@ -674,6 +674,10 @@ video {
   margin-top: 2rem;
 }
 
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
 .block {
   display: block;
 }
@@ -756,6 +760,10 @@ video {
 
 .w-16 {
   width: 4rem;
+}
+
+.w-1\/2 {
+  width: 50%;
 }
 
 .min-w-\[240px\] {
@@ -1125,6 +1133,11 @@ video {
   line-height: 1.75rem;
 }
 
+.text-sm\/6 {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+}
+
 .font-bold {
   font-weight: 700;
 }
@@ -1435,6 +1448,10 @@ video {
 }
 
 @media (min-width: 640px) {
+  .sm\:col-span-3 {
+    grid-column: span 3 / span 3;
+  }
+
   .sm\:w-auto {
     width: auto;
   }
