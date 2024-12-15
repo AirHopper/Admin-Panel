@@ -9,13 +9,3 @@ export const loginPage = async (req, res, next) => {
   }
 };
 
-
-export const login = async (req, res, next) => {
-  try {
-    
-    
-    res.edge("pages/auth/login");
-  } catch (error) {
-    next(error);
-  }
-};

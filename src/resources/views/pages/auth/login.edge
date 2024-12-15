@@ -59,7 +59,7 @@ $(document).ready(function () {
             if (response.data.role === 'Admin') {
               showToast("success", "Success", response.message);
               // Simpan token jika diperlukan
-              localStorage.setItem('authToken', response.data.token);
+              localStorage.setItem('AuthToken', response.data.token);
               localStorage.setItem('user', response.data.email);
               localStorage.setItem('role', response.data.role);
               // Redirect ke dashboard atau halaman lain
