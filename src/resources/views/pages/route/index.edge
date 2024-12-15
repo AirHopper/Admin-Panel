@@ -1,10 +1,127 @@
-@layout.app({ title: "Routes List Page" })
+@layout.app({ title: "Routes List" })
 @slot('main')
 
-<div class="p-6 w-full bg-white">
+<div class="px-6 py-2 w-full bg-white rounded-lg">
     <!-- Content Head -->
-    <h1>Ini Routes List Page</h1>
+    <div class="flex justify-end items-center mb-2">
+          @component('components/ui/modal', {
+            title: 'Add Route',
+            buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
+            })
+            @slot('header')
+                Add Route
+            @end
+            @slot('content')
+            
+            <form id="routeForm" class="max-w-sm mx-auto">
+                <div class="mb-5">
+                    <label for="departureAirportId" class="block mb-2 text-sm font-medium text-gray-900">Select a Departure City</label>
+                    <select id="departureAirportId" name="departureAirportId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="" selected>Choose a City</option>
+                        @each(city in cities)
+                            <option value="{{ city.code }}">{{ city.name }} -  {{ city.code }}</option>
+                        @end
+                    </select>
+                </div>
+                <div class="mb-5">
+                    <label for="arrivalAirportId" class="block mb-2 text-sm font-medium text-gray-900">Select a Arrival City</label>
+                    <select id="arrivalAirportId" name="arrivalAirportId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="" selected>Choose a City</option>
+                        @each(city in cities)
+                            <option value="{{ city.code }}">{{ city.name }} - {{ city.code }}</option>
+                        @end
+                    </select>
+                </div>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
+            </form>
+            @end
+        @end
+    </div>
+
+    <div class="border-2 rounded-lg p-4 overflow-x-auto">
+        <table class="myTable display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Departure City</th>
+                    <th>Departure Airport</th>
+                    <th>Arrival City</th>
+                    <th>Arrival Airport</th>
+                    <th>Distance</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @each(data in routes)
+                    <tr>
+                        <td>{{ data.DepartureAirport.City.name }} ({{ data.DepartureAirport.City.code }})</td>
+                        <td>{{ data.DepartureAirport.name }}</td>
+                        <td>{{ data.ArrivalAirport.City.name }} ({{ data.ArrivalAirport.City.code }})</td>
+                        <td>{{ data.ArrivalAirport.name }}</td>
+                        <td>{{ data.distance }}</td>
+                        <td>
+                            <button type="button" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                @else
+                    <tr>
+                        <td colspan="7" class="text-center">No data available</td>
+                    </tr>
+                @end
+            </tbody>
+            
+        </table>
+    </div>
 </div>
+
+<script>
+    // const api = "{{ api }}/api/v1/airports"
+    // console.log({api})
+
+    $(document).ready(function () {
+    $('#routeForm').on('submit', function (e) {
+        e.preventDefault(); // Mencegah reload halaman saat submit
+
+        // Ambil data dari form
+        const formData = {
+            departureAirportId: $('#departureAirportId').val(),
+            arrivalAirportId: $('#arrivalAirportId').val(),
+        };
+
+        $.ajax({
+            url: '{{ api }}/api/v1/routes',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                showToast("success", "Success", "Route created successfully!");
+                window.location.reload();
+            },
+            error: function (xhr) {
+                // Tampilkan pesan error jika terjadi kesalahan
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.errors) {
+                        const errors = xhr.responseJSON.errors;
+                        let errorMessages = '';
+                        errors.forEach(error => {
+                            errorMessages += `${error.field}: ${error.message}\n`;
+                        });
+                        showToast("error", "Validation Error", errorMessages);
+                    } else if (xhr.responseJSON.message) {
+                        showToast("error", "Error", xhr.responseJSON.message);
+                    } else {
+                        showToast("error", "Error", "An unexpected error occurred. Please try again.");
+                    }
+                } else {
+                    showToast("error", "Error", `Error ${xhr.status}: ${xhr.statusText}`);
+                }
+            },
+        });
+    });
+});
+
+</script>
 
 @endslot
 @end
