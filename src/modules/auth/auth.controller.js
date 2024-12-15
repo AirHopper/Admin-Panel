@@ -1,10 +1,20 @@
-import * as AuthService from "./auth.service.js";
+
+export const loginPage = async (req, res, next) => {
+  try {
+    const api = process.env.API_URL;
+
+    res.edge("pages/auth/login", { api });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 export const login = async (req, res, next) => {
   try {
-    const data = await AuthService.login();
-
-    res.edge("pages/auth/login", { login: data.result });
+    
+    
+    res.edge("pages/auth/login");
   } catch (error) {
     next(error);
   }
