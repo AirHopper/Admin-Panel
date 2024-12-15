@@ -16,7 +16,7 @@ export const index = async (req, res, next) => {
 export const listAirplanes = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
-    const id = req.params.id;
+    // const code = req.params.code;
 
     const airplanesResponse = await axios.get(`${api}/api/v1/airplanes`);
 

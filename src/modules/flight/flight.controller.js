@@ -4,7 +4,7 @@ export const index = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
     
-    const flightsResponse = await axios.get(`${api}/api/v1/flights?limit=100`);
+    const flightsResponse = await axios.get(`${api}/api/v1/flights?limit=999999`);
 
     const data = {
       api: api,

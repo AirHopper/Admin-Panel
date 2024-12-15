@@ -108,6 +108,7 @@
                 success: function (response) {
                     // Call showToast for success
                     showToast("success", "Success", "City created successfully!");
+                    window.location.reload();
                 },
                 error: function (xhr) {
                     const errorResponse = xhr.responseJSON || { message: 'Failed to submit the form. Please try again.' };

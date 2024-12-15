@@ -35,8 +35,7 @@
                         <td>{{ index + 1 }}</td>
                         <td>{{ airline.iataCode }}</td>
                         <td><img src="{{ airline.imageUrl }}" class="w-16" alt=""></td>
-                        {{--  <td><a href="/admin/airlines/{{ airline.id }}/airplanes">{{ airline.name }}</a></td>  --}}
-                        <td><a href="/admin/airline/1/airplanes" class="text-blue-600 hover:text-blue-800 hover:underline">{{ airline.name }}</a></td>
+                        <td><a href="/admin/airline/{{ airline.iataCode }}/airplanes" class="text-blue-600 hover:text-blue-800 hover:underline">{{ airline.name }}</a></td>
                         <td>---</td>
                         <td>
                             {{--  <a href="{{ api }}/airlines/{{ airline.id }}/edit" class="btn btn-primary">Edit</a>  --}}
