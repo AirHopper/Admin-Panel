@@ -5,7 +5,7 @@
     <div class="flex flex-row w-full justify-end mb-2">
         @component('components/ui/modal', {
         title: 'Add City',
-        buttonClass: 'bg-blue-300 hover:bg-blue-500',
+        buttonClass: 'bg-blue-300 hover:bg-blue-500 px-4 py-2',
         })
             @slot('header')
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -22,7 +22,8 @@
             <form id="cityForm" class="max-w-sm mx-auto">
                 <div class="mb-5">
                     <label for="code" class="block mb-2 text-sm font-medium text-gray-900">City ID</label>
-                    <input type="text" id="code" name="code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="JKT" required />
+                    <input type="text" id="code" name="code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" minlength="2" maxlength="10"  placeholder="JKT" required />
+                    <p class="text-xs text-red-500">Minimal 2 karakter, maksimal 10 karakter</p>
                 </div>
                 <div class="mb-5">
                     <label for="name" class="block mb-2 text-sm font-medium text-gray-900">City Name</label>
@@ -34,7 +35,8 @@
                 </div> 
                 <div class="mb-5">
                     <label for="country-code" class="block mb-2 text-sm font-medium text-gray-900">Country Code</label>
-                    <input type="text" id="country-code" name="countryCode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="IND" required />
+                    <input type="text" id="country-code" name="countryCode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" minlength="2" maxlength="3" placeholder="IND" required />
+                    <p class="text-xs text-red-500">Minimal 2 karakter, maksimal 3 karakter</p>
                 </div>
                 <div class="mb-5">
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">Select a Continent</label>
@@ -51,7 +53,7 @@
                     <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Upload file</label>
                     <input type="file" id="file_input" name="image" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 </div>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Add City</button>
             </form>
 
             @end
@@ -117,7 +119,6 @@
                 processData: false, 
                 contentType: false, 
                 success: function (response) {
-                    // Call showToast for success
                     showToast("success", "Success", "City created successfully!");
                     setTimeout(() => {
                         window.location.reload();
@@ -125,7 +126,6 @@
                 },
                 error: function (xhr) {
                     const errorResponse = xhr.responseJSON || { message: 'Failed to submit the form. Please try again.' };
-                    // Call showToast for error
                     showToast("error", "Error", errorResponse.message);
                 }
             });
@@ -141,17 +141,16 @@
         .then(async (response) => {
             const result = await response.json();
             if (response.ok) {
-                // Toast success jika berhasil
                 showToast("success", "Success", `City with code ${cityCode} deleted successfully.`);
-                window.location.reload(); // Refresh halaman setelah berhasil
+                setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
             } else {
-                // Toast error jika gagal
                 const message = result.message || "Failed to delete the city.";
                 showToast("error", "Error", message);
             }
         })
         .catch((error) => {
-            // Toast error jika ada masalah koneksi atau lainnya
             console.error(error);
             showToast("error", "Error", "An unexpected error occurred. Please try again.");
         });
