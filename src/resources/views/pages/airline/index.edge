@@ -12,7 +12,24 @@
                 Add Airlines
             @end
             @slot('content')
-            <h1>Ini Modal Add Airlines</h1>
+            
+            <form id="airlineForm" class="max-w-sm mx-auto">
+                <div class="mb-5">
+                    <label for="iataCode" class="block mb-2 text-sm font-medium text-gray-900">Airline ID</label>
+                    <input type="text" id="iataCode" name="iataCode" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="AH" required />
+                </div>
+                <div class="mb-5">
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Airline Name</label>
+                    <input type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Kodok Airlines" required />
+                </div>
+                <div class="mb-5">
+                    <label class="block mb-2 text-sm font-medium text-gray-900" for="image">Upload Image</label>
+                    <input type="file" id="image" name="image" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                </div>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Submit</button>
+            </form>
+
+            
             @end
         @end
     </div>
@@ -49,6 +66,54 @@
         </table>
     </div>
 </div>
+
+<script>
+$(document).ready(function () {
+    $('#airlineForm').on('submit', function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: "{{ api }}/api/v1/airlines",
+            type: 'POST',
+            data: formData,
+            processData: false, 
+            contentType: false, 
+            success: function (response) {
+                if (response.success) {
+                    showToast("success", "Success", response.message || "Airline created successfully!");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showToast("error", "Error", response.message || "An unexpected error occurred.");
+                }
+            },
+            error: function (xhr) {
+                if (xhr.status === 400 && xhr.responseJSON) {
+                    const errorResponse = xhr.responseJSON;
+                    let errorMessages = '';
+
+                    if (errorResponse.errors && Array.isArray(errorResponse.errors)) {
+                        errorResponse.errors.forEach(error => {
+                            errorMessages += `${error.field}: ${error.message}\n`;
+                        });
+                    } else {
+                        errorMessages = errorResponse.message || "Validation failed. Please check your inputs.";
+                    }
+
+                    showToast("error", "Validation Error", errorMessages);
+                } else {
+                    const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
+                    showToast("error", "Error", errorMessage);
+                }
+            }
+        });
+    });
+});
+
+</script>
 
 @endslot
 @end
