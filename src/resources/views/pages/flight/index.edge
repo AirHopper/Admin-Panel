@@ -17,7 +17,7 @@
         @end
     </div>
 
-    <div class="border-2 rounded-lg p-4 overflow-x-auto">
+    <div class="border-2 rounded-lg p-4 overflow-x-auto text-sm">
         <table class="myTable display" style="width:100%">
             <thead>
                 <tr>
@@ -56,9 +56,23 @@
                         </td>
                         <td>{{ data.airline }}</td>
                         <td>{{ data.departure.city.name }}</td>
-                        <td>{{ data.departure.time }}</td>
+                        <td class="flex flex-col">
+                            <span class="border-b border-gray-500">
+                              {{ new Date(data.departure.time).toISOString().split('T')[0] }}
+                            </span>
+                            <span>
+                              {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }}
+                            </span>
+                        </td>
                         <td>{{ data.arrival.city.name }}</td>
-                        <td>{{ data.arrival.time }}</td>
+                        <td class="flex flex-col">
+                            <span class="border-b border-gray-500">
+                                {{ new Date(data.arrival.time).toISOString().split('T')[0] }}
+                            </span>
+                            <span>
+                                {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                            </span>
+                        </td>
                         <td>
                             <div class="flex flex-row gap-x-2">
                                 <a href="/admin/flight/{{ data.id }}" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-transparent bg-green-300 text-green-800 hover:bg-green-400 focus:outline-none focus:bg-green-200 disabled:opacity-50 disabled:pointer-events-none">

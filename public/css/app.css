@@ -884,6 +884,10 @@ video {
   border-bottom-width: 2px;
 }
 
+.border-b {
+  border-bottom-width: 1px;
+}
+
 .border-none {
   border-style: none;
 }
@@ -895,6 +899,11 @@ video {
 
 .border-transparent {
   border-color: transparent;
+}
+
+.border-gray-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity, 1));
 }
 
 .bg-black {
