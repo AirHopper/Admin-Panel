@@ -36,7 +36,7 @@
                         <td>{{ airline.iataCode }}</td>
                         <td><img src="{{ airline.imageUrl }}" class="w-16" alt=""></td>
                         <td><a href="/admin/airline/{{ airline.iataCode }}/airplanes" class="text-blue-600 hover:text-blue-800 hover:underline">{{ airline.name }}</a></td>
-                        <td>---</td>
+                        <td>{{ airline._count.Airplanes }}</td>
                         <td>
                             {{--  <a href="{{ api }}/airlines/{{ airline.id }}/edit" class="btn btn-primary">Edit</a>  --}}
                             <button type="button" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none">
