@@ -80,6 +80,20 @@
                         <p>Ini Modal Edit</p>
                         @end
                     @end
+                    @component('components/ui/modal', { title: 'Delete City', })
+                        @slot('header')
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                            <path fill="#ff0b0b" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"/>
+                        </svg>
+                        @end
+                        @slot('content')
+                        <div class="text-center mb-5">Apakah kamu yakin ingin menghapus kota ini? <span class="font-bold text-red-500">({{ city.name }})</span></div>
+                        <div class="flex flex-row gap-x-2 justify-end">
+                            <button class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 hover:text-black duration-300 transition-all ease-in-out" onclick="deleteCity('{{city.code}}')">Hapus</button>
+                            <button class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 hover:text-black duration-300 transition-all ease-in-out" @click="modalOpen = false">Batal</button>
+                        </div>
+                        @end
+                    @end
                 @end
             @endeach
         @else
@@ -116,7 +130,33 @@
                 }
             });
         });
+
+
     });
+
+    function deleteCity(cityCode) {
+        fetch(`{{ api }}/api/v1/cities/${cityCode}`, {
+            method: 'DELETE',
+        })
+        .then(async (response) => {
+            const result = await response.json();
+            if (response.ok) {
+                // Toast success jika berhasil
+                showToast("success", "Success", `City with code ${cityCode} deleted successfully.`);
+                window.location.reload(); // Refresh halaman setelah berhasil
+            } else {
+                // Toast error jika gagal
+                const message = result.message || "Failed to delete the city.";
+                showToast("error", "Error", message);
+            }
+        })
+        .catch((error) => {
+            // Toast error jika ada masalah koneksi atau lainnya
+            console.error(error);
+            showToast("error", "Error", "An unexpected error occurred. Please try again.");
+        });
+}
+
 </script>
     
 @endslot

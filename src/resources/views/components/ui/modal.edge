@@ -1,6 +1,6 @@
 <div x-data="{ modalOpen: false }" @keydown.escape.window="modalOpen = false" class="relative z-50 w-auto h-auto">
     <button @click="modalOpen=true"
-        class="px-4 py-1 rounded-md duration-300 transition-all ease-in-out hover:text-gray-200 shadow-lg font-semibold text-md flex flex-row gap-2 {{ buttonClass }}">
+        class="py-1 rounded-md duration-300 transition-all ease-in-out hover:text-gray-200 shadow-lg font-semibold text-md flex flex-row gap-2 {{ buttonClass }}">
         {{{ await $slots.header() }}}
     </button>
     <template x-teleport="body">

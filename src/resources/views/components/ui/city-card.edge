@@ -3,8 +3,10 @@
         class="w-full h-32 object-cover rounded-t-lg">
     <div class="mt-2">
         <div class="flex flex-row w-full justify-between">
-            <h3 class="text-lg font-semibold">{{ name }} <span class="text-sm text-gray-500">({{ cityCode }})</span></h3>
-            {{{ await $slots.main() }}}
+            <h3 class="text-lg font-semibold w-full">{{ name }} <span class="text-sm text-gray-500">({{ cityCode }})</span></h3>
+            <div class="flex flex-row gap-x-2 justify-end">
+                {{{ await $slots.main() }}}
+            </div>
         </div>
         <p class="text-gray-600">{{ country }} ({{ countryCode }})</p>
         <p class="text-sm text-gray-500">
