@@ -1,5 +1,5 @@
 {
-  "name": "admin",
+  "name": "admin-airhopper",
   "version": "1.0.0",
   "description": "This repository is for the admin panel",
   "main": "./src/server.js",

@@ -7,8 +7,8 @@
         {{--  Ini Logi Maskapai  --}}
         <a href="/admin/airline" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">Back</a>
         <div class="flex items-center gap-x-2">
-            <img src="/images/airhopper.jpg" class="rounded-xl w-10" alt="" srcset="" />
-            <span class="text-md font-medium">Airline Name</span>
+            <img src="{{airlines.imageUrl}}" class="rounded-xl w-10" alt="" srcset="" />
+            <span class="text-md font-medium">{{ airlines.name }}</span>
         </div>
         @component('components/ui/modal', {
             title: 'Add Airplane',
@@ -36,7 +36,7 @@
                 </tr>
             </thead>
             <tbody class="text-center">
-                @each((data, index) in airplanes)
+                @each((data, index) in airlines.Airplanes)
                     <tr>
                         <td>{{ index + 1 }}</td>
                         <td>{{ data.name }}</td>
@@ -44,7 +44,6 @@
                         <td>{{ data.pricePerKm }}</td>
                         <td>---</td>
                         <td>
-                            {{--  <a href="{{ api }}/airlines/{{ airline.id }}/edit" class="btn btn-primary">Edit</a>  --}}
                             <button type="button" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none">
                                 Edit
                               </button>

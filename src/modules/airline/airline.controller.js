@@ -16,13 +16,13 @@ export const index = async (req, res, next) => {
 export const listAirplanes = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
-    // const code = req.params.code;
+    const code = req.params.code;
 
-    const airplanesResponse = await axios.get(`${api}/api/v1/airplanes`);
+    const airlinesResponse = await axios.get(`${api}/api/v1/airlines/${code}`);
 
     const data = {
       api: api,
-      airplanes: airplanesResponse.data.data,
+      airlines: airlinesResponse.data.data,
     };
 
     res.edge("pages/airline/listAirplanes", data);
