@@ -16,7 +16,6 @@ export const index = async (req, res, next) => {
               Authorization: `Bearer ${token}`,
             },
           });
-
         
         const totalData = {
             totalCities : cities.data.data.length,
