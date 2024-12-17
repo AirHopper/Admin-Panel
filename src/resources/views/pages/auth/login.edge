@@ -24,7 +24,7 @@
         <div class="mb-4 text-lg">
           <input
             class="rounded-3xl border-none bg-blue-400 bg-opacity-50 px-6 py-2 text-center text-inherit placeholder-slate-200 shadow-lg outline-none backdrop-blur-md"
-            type="password" name="password" id="password" placeholder="*********" />
+            type="password" name="password" id="password" placeholder="*********" required />
         </div>
       
         <div class="mt-8 flex justify-center text-lg text-black">
@@ -40,52 +40,57 @@
 
 <script>
 
-$(document).ready(function () {
+  $(document).ready(function () {
+    const savedIdentifier = sessionStorage.getItem('identifier');
+    if (savedIdentifier) {
+      $('#identifier').val(savedIdentifier);
+    }
+
+
     $('#loginButton').on('click', function () {
-      const formData = {
-        identifier: $('#identifier').val(),
-        password: $('#password').val(),
-      };
+  const identifier = $('#identifier').val().trim();
+  const password = $('#password').val().trim();
 
-      console.log('Form Data:', formData);
+  // Validasi input tidak boleh kosong
+  if (!identifier || !password) {
+    if (!identifier) {
+      showToast("error", "Validation Error", "Identifier (email) must be filled!");
+      $('#identifier').focus(); // Fokus ke input identifier
+    } else if (!password) {
+      showToast("error", "Validation Error", "Password must be filled!");
+      $('#password').focus(); // Fokus ke input password
+    }
+    return; // Hentikan eksekusi jika validasi gagal
+  }
 
-      $.ajax({
-        url: '{{ api }}/api/v1/auth/login', // Sesuaikan URL endpoint login API
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(formData),
-        success: function (response) {
-          if (response.success) {
-            if (response.data.role === 'Admin') {
-              showToast("success", "Success", response.message);
-              // Simpan token jika diperlukan
-              localStorage.setItem('AuthToken', response.data.token);
-              localStorage.setItem('user', response.data.email);
-              localStorage.setItem('role', response.data.role);
-              // Redirect ke dashboard atau halaman lain
-              window.location.href = '/admin/dashboard';
-            } else {
-              showToast("error", "Error", "You are not admin");
-              return;
-            }
-          } else {
-            showToast("error", "Error", response.message || 'Login failed');
-          }
-        },
-        error: function (xhr) {
-          if (xhr.responseJSON) {
-            if (xhr.responseJSON.error) {
-              const errorMessage = xhr.responseJSON.message || 'Invalid email or password';
-              showToast("error", "Error", errorMessage);
-            } else {
-              showToast("error", "Error", "An unexpected error occurred. Please try again.");
-            }
-          } else {
-            showToast("error", "Error", `Error ${xhr.status}: ${xhr.statusText}`);
-          }
-        }
-      });
+  const formData = {
+    identifier: identifier,
+    password: password,
+  };
+
+  $.ajax({
+    url: '/admin/auth/login', // Ganti ke server-side route
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(formData),
+    success: function (response) {
+      showToast("success", "Success", response.message);
+
+      // Simpan identifier di sessionStorage
+      sessionStorage.setItem('identifier', formData.identifier);
+
+      // Redirect ke dashboard
+      setTimeout(() => {
+        window.location.href = '/admin/dashboard';
+      }, 2000);
+    },
+      error: function (xhr) {
+        showToast("error", "Error", "Login failed. Please try again.");
+      }
     });
+  });
+
+  
   });
 
 
@@ -94,3 +99,5 @@ $(document).ready(function () {
 
 @endslot
 @end
+
+

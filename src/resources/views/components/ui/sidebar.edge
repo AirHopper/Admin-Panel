@@ -102,12 +102,25 @@
   </nav>
   
   <script>
-function logout() {
-  localStorage.removeItem('AuthToken');
-  localStorage.removeItem('user');
-  localStorage.removeItem('role');
-
-  window.location.href = '/admin/auth/login';
-}
+    function logout() {
+      $.ajax({
+        url: '/admin/auth/logout',
+        type: 'POST',
+        success: function(response) {
+          console.log(response);
+          showToast("success", "Logged Out", "You have successfully logged out.");
+          setTimeout(() => {
+            window.location.href = '/admin/auth/login';
+          }, 2000);
+        },
+        error: function(xhr) {
+          console.log(xhr.responseText);  // Cek error jika terjadi
+          showToast("error", "Error", "An error occurred during logout.");
+        }
+      });
+    }
   </script>
+  
+    
+    
 </div>

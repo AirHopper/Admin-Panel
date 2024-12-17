@@ -4,6 +4,15 @@ export const index = async (req, res, next) => {
     try {
         const api = process.env.API_URL;
 
+        // Ambil token dari cookie
+        const token = req.cookies.AuthToken;
+        const email = req.cookies.email;
+        const role = req.cookies.role;
+
+        if (!token) {
+            return res.redirect('/admin/auth/login'); // Redirect ke halaman login jika token tidak ada
+        }
+
         const cities = await axios.get(`${api}/api/v1/cities`);
         const airports = await axios.get(`${api}/api/v1/airports`);
         const airlines = await axios.get(`${api}/api/v1/airlines`);
@@ -23,7 +32,7 @@ export const index = async (req, res, next) => {
             // totalUsers : users.data.data.length,
         }
 
-        res.edge('pages/dashboard/index', { totalData });
+        res.edge('pages/dashboard/index', { totalData, email, role });
     } catch (error) {
         next(error)
     }
