@@ -7,7 +7,6 @@ const formatRupiah = (value) => {
   }).format(value);
 };
 
-
 export const index = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
@@ -43,6 +42,20 @@ export const detail = async (req, res, next) => {
     };
 
     res.edge("pages/flight/detail", data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const create = async (req, res, next) => {
+  try {
+    const api = process.env.API_URL;
+    
+    const data = {
+      api: api,
+    };
+
+    res.edge("pages/flight/create", data  )
   } catch (error) {
     next(error);
   }

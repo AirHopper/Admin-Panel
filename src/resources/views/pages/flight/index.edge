@@ -4,17 +4,9 @@
 <div class="px-6 py-2 w-full bg-white rounded-lg">
     <!-- Content Head -->
     <div class="flex justify-end items-center mb-2">
-        @component('components/ui/modal', {
-            title: 'Add Flights',
-            buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
-            })
-            @slot('header')
-                Add Flights
-            @end
-            @slot('content')
-                <h1>Ini Flights List Page</h1>
-            @end
-        @end
+        <a href="/admin/flight/create" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">
+            Add Flights
+        </a>
     </div>
 
     <div class="border-2 rounded-lg p-4 overflow-x-auto text-sm">
