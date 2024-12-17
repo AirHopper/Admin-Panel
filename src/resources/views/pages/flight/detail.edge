@@ -6,183 +6,223 @@
     <div class="flex justify-between items-center">
         <a href="/admin/flight" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">Back</a>
         @component('components/ui/modal', {
-            title: 'Add Flights',
+            title: 'Edit Flight',
             buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
             })
             @slot('header')
-                Add Flights
+                Edit
             @end
             @slot('content')
-                <h1>Ini Flights List Page</h1>
+                <h1>Edit Flight</h1>
             @end
         @end
     </div>
 
     <div class="flex flex-col gap-4 w-full">
         {{--  Detail  --}}
-        <div class="flex w-full gap-4 border-2 rounded-lg px-4 py-2">
-            <table class="w-full divide-gray-200">
+        <div class="flex w-full gap-4 border-2 rounded-lg px-4 py-2 shadow-md">
+            <table class="w-5/12 divide-gray-200">
                 <tr class="odd:bg-white even:bg-gray-100">
                     <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Class</td>
                     <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                        <span class="bg-green-500 rounded-full text-sm px-2 py-1">Economy</span>
+                        <span class="bg-green-300 rounded-full text-sm px-2 py-1 shadow-md">{{ flight.class }}</span>
                     </td>
                 </tr>
                 <tr class="odd:bg-white even:bg-gray-100">
                     <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Airline</td>
-                    <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800 font-bold underline">Garuda Indonesia</td>
+                    <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800 font-bold underline">{{ flight.airline }}</td>
                 </tr>
                 <tr class="odd:bg-white even:bg-gray-100">
                     <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Airplane</td>
-                    <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Boeing 737-800</td>
+                    <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ flight.airplane }}</td>
                 </tr>
                 <tr class="odd:bg-white even:bg-gray-100">
                     <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Active</td>
                     <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                        {{--  @if($flight->status == 'active')  --}}
-                            <span class="bg-green-500 rounded-full text-sm px-2 py-1">Active</span>
-                        {{--  @else
-                            <span class="bg-red-500 rounded-full text-sm px-2 py-1">Inactive</span>
-                        @endif  --}}
+                        @if(flight.isActive)
+                            <span class="bg-green-300 rounded-full text-sm px-2 py-1 shadow-md">Active</span>
+                        @else
+                            <span class="bg-red-300 rounded-full text-sm px-2 py-1 shadow-md">Inactive</span>
+                        @endif
                     </td>
                 </tr>
                 <tr class="odd:bg-white even:bg-gray-100">
                     <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Total Ticket</td>
-                    <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                        1 - 
-                        {{--  @if($flight->status == 'active')  --}}
-                            <span class="bg-yellow-500 rounded-full text-xs px-2 py-1">Non Transit</span>
-                        {{--  @else
-                            <span class="bg-green-500 rounded-full text-xs px-2 py-1">Transit</span>
-                        @endif  --}}
+                    <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800 w-full flex flex-row gap-4">
+                        @if(flight.totalTickets <= 1)
+                            <span class="bg-yellow-300 rounded-full text-xs px-2 py-1 shadow-md">{{ flight.totalTickets }}</span>
+                            <span class="bg-yellow-300 rounded-full text-xs px-2 py-1 shadow-md">Non Transit</span>
+                        @else
+                            <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">{{ flight.totalTickets }}</span>
+                            <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">Transit</span>
+                        @endif
                     </td>
                 </tr>
             </table>
-            <div class="flex w-full flex-row gap-4">
+            <div class="flex w-7/12 flex-row gap-4">
                 {{--  Facilities  --}}
-                <div class="flex w-full gap-4 border-2 rounded-lg">
+                <div class="flex w-full gap-4 border-2 rounded-lg p-2 shadow-md">
                     <table class="w-full divide-gray-200">
                         <tr class="odd:bg-white even:bg-gray-100">
                             <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Baggage</td>
-                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">20 kg</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ flight.baggage }} kg</td>
                         </tr>
                         <tr class="odd:bg-white even:bg-gray-100">
                             <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Cabin Baggage</td>
-                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">7 kg</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ flight.cabinBaggage }} kg</td>
                         </tr>
                         <tr class="odd:bg-white even:bg-gray-100">
                             <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Entertainment</td>
                             <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                                <span class="text-green-500">Yes</span>
+                                @if(flight.entertainment)
+                                    <span class="text-green-600 font-bold underline">Yes</span>
+                                @else
+                                    <span class="text-red-600 font-bold underline">No</span>
+                                @endif
                             </td>
                         </tr>
                         <tr class="odd:bg-white even:bg-gray-100">
                             <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Price</td>
-                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Rp. 100.000</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ flight.price }}</td>
                         </tr>
                         <tr class="odd:bg-white even:bg-gray-100">
                             <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Total Price</td>
-                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Rp. 400.000</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ flight.price }}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="flex flex-col w-full gap-4 border-2 rounded-lg px-4 py-2">
+                {{--  Seat  --}}
+                <div class="flex flex-col w-full gap-4 border-2 rounded-lg px-4 py-2 shadow-md">
                     <div class="w-full flex flex-row justify-between items-center">
                         <h1>TotalSeat</h1>
                         <span class="text-md font-medium text-gray-800 underline">
-                            100
+                            {{ flight.totalSeats }}
                         </span>
                     </div>
                     <div class="flex flex-col w-full gap-4">
-                        <div class="flex flex-col gap-2 bg-green-200 rounded-lg justify-center items-center py-2">
+                        <div class="flex flex-col gap-2 bg-green-200 rounded-lg justify-center items-center py-2 shadow-md">
                             <h1 class="text-sm font-medium text-gray-800 text-center">Available Seats</h1>
-                            <h1>100</h1>
+                            <h1 class="text-md font-bold text-gray-800">{{ flight.availableSeats }}</h1>
                         </div>
-                        <div class="flex flex-col gap-2 bg-yellow-200 rounded-lg justify-center items-center py-2">
+                        <div class="flex flex-col gap-2 bg-yellow-200 rounded-lg justify-center items-center py-2 shadow-md">
                             <h1 class="text-sm font-medium text-gray-800 text-center">Occupied Seats</h1>
-                            <h1>100</h1>
+                            <h1 class="text-md font-bold text-gray-800">{{ flight.occupiedSeats }}</h1>
                         </div>
                     </div>
-                    {{--  <div class="flex w-full gap-4">
-                        <div class="flex flex-col gap-2 bg-gray-100 rounded-lg justify-center items-center">
-                            <h1 class="text-sm font-medium text-gray-800 text-center">Total Seats</h1>
-                            <h1>100</h1>
-                        </div>
-                        <div class="flex flex-col gap-2 bg-gray-100 rounded-lg justify-center items-center">
-                            <h1 class="text-sm font-medium text-gray-800 text-center">Available Seats</h1>
-                            <h1>100</h1>
-                        </div>
-                        <div class="flex flex-col gap-2 bg-gray-100 rounded-lg justify-center items-center">
-                            <h1 class="text-sm font-medium text-gray-800 text-center">Occupied Seats</h1>
-                            <h1>100</h1>
-                        </div>
-                    </div>  --}}
                 </div>
             </div>
         </div>
         <div class="flex flex-row gap-4 w-full justify-between">   
-            <div class="flex flex-col gap-2 border-2 rounded-lg w-full px-4 py-2">
-                <h1>Departure</h1>
+            {{--  Departure  --}}
+            <div class="flex flex-col gap-2 border-2 rounded-lg w-full px-4 py-2 shadow-md">
+                <div class="w-full font-bold text-gray-800 text-center underline">Departure</div>
                 <hr>
                 <table class="w-full divide-gray-200">
                     <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Date</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800 flex flex-col">
+                            {{ new Date(flight.departure.time).toISOString().split('T')[0] }}
+                        </td>
+                    </tr>                    
+                    <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Time</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">10:00 WIB</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800 flex flex-col">
+                            {{ new Date(flight.departure.time).toISOString().split('T')[1].slice(0, 8) }}
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Airport</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Garuda Indonesia (CGK)</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            <span class="font-bold">{{ flight.departure.airport.name }}</span>
+                            ({{ flight.departure.airport.code }})
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Airport Type</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Internasional</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            @if(flight.departure.airport.type === 'Internasional')
+                                <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                            @else
+                                <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                            @endif
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">City</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Jakarta (CGK)</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            <span class="font-bold">{{ flight.departure.city.name }}</span>
+                            ({{ flight.departure.city.code }})
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Country</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Indonesia (ID)</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            <span class="font-bold">{{ flight.departure.country.name }}</span>
+                            ({{ flight.departure.country.code }})
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Terminal</td>
                         <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                            Terminal 1
-                            <span class="bg-green-500 rounded-full text-xs px-2 py-1">International</span> 
+                            <span class="font-bold">{{ flight.departure.terminal.name }}</span>
+                            <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">{{ flight.departure.terminal.type }}</span> 
                         </td>
                     </tr>
                 </table>
             </div>
-            <div class="flex flex-col gap-2 border-2 rounded-lg w-full px-4 py-2">
-                <h1>Arrival</h1>
+            {{--  Arrival  --}}
+            <div class="flex flex-col gap-2 border-2 rounded-lg w-full px-4 py-2 shadow-md">
+                <div class="w-full font-bold text-gray-800 text-center underline">Arrival</div>
                 <hr>
                 <table class="w-full divide-gray-200">
                     <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Date</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            {{ new Date(flight.arrival.time).toISOString().split('T')[0] }}
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Time</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">10:00 WIB</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            {{ new Date(flight.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Airport</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Garuda Indonesia (CGK)</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            <span class="font-bold">{{ flight.arrival.airport.name }}</span>
+                            ({{ flight.arrival.airport.code }})
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Airport Type</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Internasional</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            @if(flight.arrival.airport.type === 'Internasional')
+                                <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                            @else
+                                <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                            @endif
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">City</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Jakarta (CGK)</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            <span class="font-bold">{{ flight.arrival.city.name }}</span>
+                            ({{ flight.arrival.city.code }})
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Country</td>
-                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">Indonesia (ID)</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                            <span class="font-bold">{{ flight.arrival.country.name }}</span>
+                            ({{ flight.arrival.country.code }})
+                        </td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-100">
                         <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Terminal</td>
                         <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                            Terminal 1
-                            <span class="bg-green-500 rounded-full text-xs px-2 py-1">International</span> 
+                            <span class="font-bold">{{ flight.arrival.terminal.name }}</span>
+                            <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">{{ flight.arrival.terminal.type }}</span> 
                         </td>
                     </tr>
                 </table>
