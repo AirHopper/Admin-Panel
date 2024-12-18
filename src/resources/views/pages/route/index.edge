@@ -17,18 +17,18 @@
                 <div class="mb-5">
                     <label for="departureAirportId" class="block mb-2 text-sm font-medium text-gray-900">Select a Departure City</label>
                     <select id="departureAirportId" name="departureAirportId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        <option value="" selected>Choose a City</option>
-                        @each(city in cities)
-                            <option value="{{ city.code }}">{{ city.name }} -  {{ city.code }}</option>
+                        <option value="" selected>Choose a Airport</option>
+                        @each(data in airports)
+                            <option value="{{ data.iataCode }}">{{ data.iataCode }} -  {{ data.City.name }} ({{ data.City.code }})</option>
                         @end
                     </select>
                 </div>
                 <div class="mb-5">
                     <label for="arrivalAirportId" class="block mb-2 text-sm font-medium text-gray-900">Select a Arrival City</label>
                     <select id="arrivalAirportId" name="arrivalAirportId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        <option value="" selected>Choose a City</option>
-                        @each(city in cities)
-                            <option value="{{ city.code }}">{{ city.name }} - {{ city.code }}</option>
+                        <option value="" selected>Choose a Airport</option>
+                        @each(data in airports)
+                            <option value="{{ data.iataCode }}">{{ data.iataCode }} - {{ data.City.name }} ({{ data.City.code }})</option>
                         @end
                     </select>
                 </div>
@@ -76,14 +76,12 @@
 </div>
 
 <script>
-    // const api = "{{ api }}/api/v1/airports"
-    // console.log({api})
+    const token = '{{ token }}'
 
     $(document).ready(function () {
     $('#routeForm').on('submit', function (e) {
-        e.preventDefault(); // Mencegah reload halaman saat submit
+        e.preventDefault();
 
-        // Ambil data dari form
         const formData = {
             departureAirportId: $('#departureAirportId').val(),
             arrivalAirportId: $('#arrivalAirportId').val(),
@@ -94,12 +92,16 @@
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
             success: function (response) {
                 showToast("success", "Success", "Route created successfully!");
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             },
             error: function (xhr) {
-                // Tampilkan pesan error jika terjadi kesalahan
                 if (xhr.responseJSON) {
                     if (xhr.responseJSON.errors) {
                         const errors = xhr.responseJSON.errors;
