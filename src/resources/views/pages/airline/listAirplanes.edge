@@ -80,55 +80,59 @@
 </div>
 
 <script>
+    const token = '{{ token }}'
+
     $(document).ready(function () {
-    $('#airplaneForm').on('submit', function (e) {
-        e.preventDefault();
+        $('#airplaneForm').on('submit', function (e) {
+            e.preventDefault();
 
-        // Ambil data dari form
-        const formData = {
-            airlineId: $('#airlineId').val(),
-            name: $('#name').val(),
-            type: $('#type').val(),
-            pricePerKm: parseFloat($('#pricePerKm').val()),
-        };
+            const formData = {
+                airlineId: $('#airlineId').val(),
+                name: $('#name').val(),
+                type: $('#type').val(),
+                pricePerKm: parseFloat($('#pricePerKm').val()),
+            };
 
-        $.ajax({
-            url: '{{ api }}/api/v1/airplanes',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function (response) {
-                if (response.success) {
-                    showToast("success", "Success", response.message || "Airplane created successfully!");
+            $.ajax({
+                url: '{{ api }}/api/v1/airplanes',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showToast("success", "Success", response.message || "Airplane created successfully!");
 
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    showToast("error", "Error", response.message || "An unexpected error occurred.");
-                }
-            },
-            error: function (xhr) {
-                if (xhr.responseJSON) {
-                    if (xhr.responseJSON.errors) {
-                        const errors = xhr.responseJSON.errors;
-                        let errorMessages = '';
-                        errors.forEach(error => {
-                            errorMessages += `${error.field}: ${error.message}\n`;
-                        });
-                        showToast("error", "Validation Error", errorMessages);
-                    } else if (xhr.responseJSON.message) {
-                        showToast("error", "Error", xhr.responseJSON.message);
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
                     } else {
-                        showToast("error", "Error", "An unexpected error occurred. Please try again.");
+                        showToast("error", "Error", response.message || "An unexpected error occurred.");
                     }
-                } else {
-                    showToast("error", "Error", `Error ${xhr.status}: ${xhr.statusText}`);
-                }
-            },
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON) {
+                        if (xhr.responseJSON.errors) {
+                            const errors = xhr.responseJSON.errors;
+                            let errorMessages = '';
+                            errors.forEach(error => {
+                                errorMessages += `${error.field}: ${error.message}\n`;
+                            });
+                            showToast("error", "Validation Error", errorMessages);
+                        } else if (xhr.responseJSON.message) {
+                            showToast("error", "Error", xhr.responseJSON.message);
+                        } else {
+                            showToast("error", "Error", "An unexpected error occurred. Please try again.");
+                        }
+                    } else {
+                        showToast("error", "Error", `Error ${xhr.status}: ${xhr.statusText}`);
+                    }
+                },
+            });
         });
     });
-});
 
 </script>
 

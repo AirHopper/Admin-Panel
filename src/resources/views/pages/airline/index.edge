@@ -69,50 +69,54 @@
 </div>
 
 <script>
-$(document).ready(function () {
-    $('#airlineForm').on('submit', function (event) {
-        event.preventDefault();
+    const token = '{{ token }}'
+    $(document).ready(function () {
+        $('#airlineForm').on('submit', function (event) {
+            event.preventDefault();
 
-        const formData = new FormData(this);
+            const formData = new FormData(this);
 
-        $.ajax({
-            url: "{{ api }}/api/v1/airlines",
-            type: 'POST',
-            data: formData,
-            processData: false, 
-            contentType: false, 
-            success: function (response) {
-                if (response.success) {
-                    showToast("success", "Success", response.message || "Airline created successfully!");
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                } else {
-                    showToast("error", "Error", response.message || "An unexpected error occurred.");
-                }
-            },
-            error: function (xhr) {
-                if (xhr.status === 400 && xhr.responseJSON) {
-                    const errorResponse = xhr.responseJSON;
-                    let errorMessages = '';
-
-                    if (errorResponse.errors && Array.isArray(errorResponse.errors)) {
-                        errorResponse.errors.forEach(error => {
-                            errorMessages += `${error.field}: ${error.message}\n`;
-                        });
+            $.ajax({
+                url: "{{ api }}/api/v1/airlines",
+                type: 'POST',
+                data: formData,
+                processData: false, 
+                contentType: false, 
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showToast("success", "Success", response.message || "Airline created successfully!");
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
                     } else {
-                        errorMessages = errorResponse.message || "Validation failed. Please check your inputs.";
+                        showToast("error", "Error", response.message || "An unexpected error occurred.");
                     }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 400 && xhr.responseJSON) {
+                        const errorResponse = xhr.responseJSON;
+                        let errorMessages = '';
 
-                    showToast("error", "Validation Error", errorMessages);
-                } else {
-                    const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
-                    showToast("error", "Error", errorMessage);
+                        if (errorResponse.errors && Array.isArray(errorResponse.errors)) {
+                            errorResponse.errors.forEach(error => {
+                                errorMessages += `${error.field}: ${error.message}\n`;
+                            });
+                        } else {
+                            errorMessages = errorResponse.message || "Validation failed. Please check your inputs.";
+                        }
+
+                        showToast("error", "Validation Error", errorMessages);
+                    } else {
+                        const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
+                        showToast("error", "Error", errorMessage);
+                    }
                 }
-            }
+            });
         });
     });
-});
 
 </script>
 
