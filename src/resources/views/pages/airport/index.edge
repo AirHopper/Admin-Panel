@@ -25,12 +25,14 @@
                 </div>
                 <div class="flex flex-row gap-2">
                     <div class="mb-5 w-1/2">
-                        <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900">Longitude</label>
-                        <input type="text" id="longitude" name="longitude" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="106.8650" required />
+                        <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900">Latitude</label>
+                        <input type="text" id="latitude" name="latitude" min="-90" max="90" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="106.8650" required />
+                        <p class="text-xs text-red-500">Min -90, Max 90</p>
                     </div>
                     <div class="mb-5 w-1/2">
-                        <label for="latitude" class="block mb-2 text-sm font-medium text-gray-900">Latitude</label>
-                        <input type="text" id="latitude" name="latitude" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="106.8650" required />
+                        <label for="longitude" class="block mb-2 text-sm font-medium text-gray-900">Longitude</label>
+                        <input type="text" id="longitude" name="longitude" min="-180" max="180" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="106.8650" required />
+                        <p class="text-xs text-red-500">Min -180, Max 180</p>
                     </div>
                 </div>
                 <div class="mb-5">
