@@ -96,19 +96,15 @@
 </div>
 
 <script>
-    // const api = "{{ api }}/api/v1/airports"
-    // console.log({api})
-
     $(document).ready(function () {
     $('#airportForm').on('submit', function (e) {
         e.preventDefault(); // Mencegah reload halaman saat submit
 
-        // Ambil data dari form
         const formData = {
             iataCode: $('#iataCode').val(),
             name: $('#name').val(),
-            latitude: parseFloat($('#latitude').val()), // Konversi ke float
-            longitude: parseFloat($('#longitude').val()), // Konversi ke float
+            latitude: parseFloat($('#latitude').val()),
+            longitude: parseFloat($('#longitude').val()),
             type: $('#type').val(),
             cityId: $('#city').val(),
         };
@@ -120,10 +116,11 @@
             data: JSON.stringify(formData),
             success: function (response) {
                 showToast("success", "Success", "Airport created successfully!");
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             },
             error: function (xhr) {
-                // Tampilkan pesan error jika terjadi kesalahan
                 if (xhr.responseJSON && xhr.responseJSON.errors) {
                     const errors = xhr.responseJSON.errors;
                     let errorMessages = '';
