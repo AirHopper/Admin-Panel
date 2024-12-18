@@ -106,11 +106,13 @@
 
 
 <script>
+    const token = '{{ token }}'
     $(document).ready(function () {
         $('#cityForm').on('submit', function (event) {
             event.preventDefault();
 
             const formData = new FormData(this);
+
 
             $.ajax({
                 url: "{{ api }}/api/v1/cities",
@@ -118,6 +120,9 @@
                 data: formData,
                 processData: false, 
                 contentType: false, 
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
                 success: function (response) {
                     showToast("success", "Success", "City created successfully!");
                     setTimeout(() => {
@@ -137,6 +142,9 @@
     function deleteCity(cityCode) {
         fetch(`{{ api }}/api/v1/cities/${cityCode}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
         })
         .then(async (response) => {
             const result = await response.json();
