@@ -59,6 +59,11 @@ export const create = async (req, res, next) => {
     const routesResponse = await axios.get(`${api}/api/v1/routes`);
     const airplanesResponse = await axios.get(`${api}/api/v1/airplanes`);
     const terminalsResponse = await axios.get(`${api}/api/v1/terminals`);
+    const discountsResponse = await axios.get(`${api}/api/v1/discounts`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
 
     const data = {
@@ -67,6 +72,7 @@ export const create = async (req, res, next) => {
       routes: routesResponse.data.data || [],
       airplanes: airplanesResponse.data.data || [],
       terminals: terminalsResponse.data.data || [],
+      discounts: discountsResponse.data.data || [],
     };
 
     res.edge("pages/flight/create", data);
