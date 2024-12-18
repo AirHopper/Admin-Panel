@@ -96,9 +96,26 @@
 </div>
 
 <script>
+    const token = '{{ token }}'
+
+    // ambil latitude dan longitude di console log dengan realtime
+    // $(document).ready(function() {
+    //     $('#latitude').on('input', function() {
+    //         const latitude = parseFloat($(this).val());
+    //         console.log({latitude});
+    //     });
+
+    //     $('#longitude').on('input', function() {
+    //         const longitude = parseFloat($(this).val()); 
+    //         console.log({longitude});
+    //     });
+    // });
+
+    const latitude = parseFloat($('#latitude').val());
+    const longitude = parseFloat($('#longitude').val());
     $(document).ready(function () {
     $('#airportForm').on('submit', function (e) {
-        e.preventDefault(); // Mencegah reload halaman saat submit
+        e.preventDefault();
 
         const formData = {
             iataCode: $('#iataCode').val(),
@@ -114,6 +131,9 @@
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
             success: function (response) {
                 showToast("success", "Success", "Airport created successfully!");
                 setTimeout(() => {
@@ -130,11 +150,11 @@
                     showToast("error", "Error", errorMessages);
                 } else {
                     showToast("error", "Error", "An error occurred. Please try again.");
-                }
-            },
+                    }
+                },
+            });
         });
     });
-});
 
 </script>
 
