@@ -5,10 +5,34 @@
     <!-- Content Head -->
     <div class="flex justify-end items-center mb-2">
         <div class="flex flex-col gap-y-2">
-            <a href="/admin/tiket/create" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">
+            @component('components/ui/modal', {
+                title: 'Add Tiket',
+                buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
+                })
+                    @slot('header')
+                        Add Tiket
+                    @end
+                    @slot('content')
+                    <div class="flex flex-col gap-y-2">
+                        <span class="text-xs text-red-500">Just For Transit</span>
+                        <div class="flex flex-row gap-x-2 w-full text-center">
+                            <div class="flex flex-col gap-y-2 w-full">
+                                <label for="searchTransit" class="text-sm font-medium text-gray-900">From</label>
+                                <input type="text" id="searchTransit" class="w-full p-2 rounded-lg border border-gray-300" placeholder="Search Transit">
+                            </div>
+                            <div class="flex flex-col gap-y-2 w-full">
+                                <label for="searchTransit" class="text-sm font-medium text-gray-900">To</label>
+                                <input type="text" id="searchTransit" class="w-full p-2 rounded-lg border border-gray-300" placeholder="Search Transit">
+                            </div>
+                        </div>
+                        <a href="#" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Search</a>
+                    </div>
+
+                    @end
+                @end
+            {{--  <a href="/admin/tiket/create" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">
                 Add Tiket
-            </a>
-            <span class="text-xs text-red-500 italic">Just For Transit</span>
+            </a>  --}}
         </div>
     </div>
     
