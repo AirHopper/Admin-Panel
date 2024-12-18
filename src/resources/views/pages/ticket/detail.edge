@@ -6,20 +6,327 @@
     <div class="flex justify-between items-center">
         <a href="/admin/ticket" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">Back</a>
         @component('components/ui/modal', {
-            title: 'Edit Flight',
+            title: 'Edit Ticket',
             buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
             })
             @slot('header')
                 Edit
             @end
             @slot('content')
-                <h1>Edit Flight</h1>
+                <h1>Edit Ticket</h1>
             @end
         @end
     </div>
 
-    <div class="flex flex-col gap-4 w-full">
+    <div class="flex flex-col gap-4 w-full text-xs">
         {{--  Detail  --}}
+        <div class="flex w-full gap-4 border-2 rounded-lg px-4 py-2 shadow-md">
+            <table class="w-full divide-gray-200">
+                <tr class="odd:bg-white even:bg-gray-100">
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800 font-bold">Class</td>
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                        <span class="bg-green-300 rounded-full px-2 py-1 shadow-md">{{ ticket.class }}</span>
+                    </td>
+                </tr>
+                <tr class="odd:bg-white even:bg-gray-100">
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800 font-bold">Total Price</td>
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800 font-bold underline">{{ ticket.totalPrice }}</td>
+                </tr>
+                <tr class="odd:bg-white even:bg-gray-100">
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800 font-bold">Total Duration</td>
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ ticket.totalDuration }}</td>
+                </tr>
+            </table>
+            <table class="w-full divide-gray-200">
+                <tr class="odd:bg-white even:bg-gray-100">
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800 font-bold">Discount</td>
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                        @if(ticket.discount != null)
+                            <span class="bg-green-300 rounded-full px-2 py-1 shadow-md">{{ ticket.discount.percentage }} %</span>
+                        @else
+                            <span class="bg-red-300 rounded-full px-2 py-1 shadow-md">No Discount</span>
+                        @endif
+                    </td>
+                </tr>
+                <tr class="odd:bg-white even:bg-gray-100">
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800 font-bold">Transit</td>
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800 w-full flex flex-row gap-4">
+                        @if(ticket.isTransits)
+                            <span class="bg-green-300 rounded-full px-2 py-1 shadow-md">Transit</span>
+                        @else
+                            <span class="bg-yellow-300 rounded-full px-2 py-1 shadow-md">Non Transit</span>
+                        @endif
+                    </td>
+                </tr>
+                <tr class="odd:bg-white even:bg-gray-100">
+                    <td class="px-6 py-2 whitespace-nowrap text-gray-800 font-bold">Active</td>
+                    <td class="px-6 py-2 whitespace-nowrap font-bold text-gray-800 w-full flex flex-row gap-4">
+                        @if(ticket.isActive)
+                            <span class="bg-green-300 rounded-full px-2 py-1 shadow-md">Active</span>
+                        @else
+                            <span class="bg-yellow-300 rounded-full px-2 py-1 shadow-md">Inactive</span>
+                        @endif
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="flex flex-row gap-4 w-full justify-between">   
+            {{--  Departure  --}}
+            <div class="flex flex-col gap-2 border-2 rounded-lg w-1/2 px-4 py-2 shadow-md">
+                <div class="w-full font-bold text-gray-800 text-center underline">Departure</div>
+                <hr>
+                <table class="w-full divide-gray-200">
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Date</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800 flex flex-col">
+                            {{ new Date(ticket.departure.time).toISOString().split('T')[0] }}
+                        </td>
+                    </tr>                    
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Time</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800 flex flex-col">
+                            {{ new Date(ticket.departure.time).toISOString().split('T')[1].slice(0, 8) }}
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Airport</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            <span class="font-bold">{{ ticket.departure.airport.name }}</span>
+                            ({{ ticket.departure.airport.code }})
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Airport Type</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            @if(ticket.departure.airport.type === 'Internasional')
+                                <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                            @else
+                                <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">City</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            <span class="font-bold">{{ ticket.departure.city.name }}</span>
+                            ({{ ticket.departure.city.code }})
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Country</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            <span class="font-bold">{{ ticket.departure.country.name }}</span>
+                            ({{ ticket.departure.country.code }})
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            {{--  Arrival  --}}
+            <div class="flex flex-col gap-2 border-2 rounded-lg w-1/2 px-4 py-2 shadow-md">
+                <div class="w-full font-bold text-gray-800 text-center underline">Arrival</div>
+                <hr>
+                <table class="w-full divide-gray-200">
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Date</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            {{ new Date(ticket.arrival.time).toISOString().split('T')[0] }}
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Time</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            {{ new Date(ticket.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Airport</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            <span class="font-bold">{{ ticket.arrival.airport.name }}</span>
+                            ({{ ticket.arrival.airport.code }})
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Airport Type</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            @if(ticket.arrival.airport.type === 'Internasional')
+                                <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                            @else
+                                <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">City</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            <span class="font-bold">{{ ticket.arrival.city.name }}</span>
+                            ({{ ticket.arrival.city.code }})
+                        </td>
+                    </tr>
+                    <tr class="odd:bg-white even:bg-gray-100">
+                        <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Country</td>
+                        <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                            <span class="font-bold">{{ ticket.arrival.country.name }}</span>
+                            ({{ ticket.arrival.country.code }})
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        {{--  flight details  --}}
+        @each((data, index) in ticket.flights)
+        <div class="flex flex-col gap-2 border-2 rounded-lg w-full px-4 py-2 shadow-md">
+            <div class="flex flex-col gap-2 items-center">
+                <div class="font-bold text-lg text-gray-800 text-center underline">Flight {{ index + 1 }}</div>
+                <div class="flex flex-row gap-2 items-center">
+                    <img src="{{ data.airline.logo }}" alt="{{ data.airline.name }}" class="h-10 rounded-md">
+                    <span class="font-bold">{{ data.airline.name }}</span>
+                    ({{ data.airplane }})
+                </div>
+            </div>
+            <div class="flex flex-row gap-4 w-full">
+                <div class="w-2/6 flex flex-col gap-2 border-2 rounded-lg px-4 py-2 shadow-md">
+                    <table class="w-full divide-gray-200">
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Baggage</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ data.baggage }}-kg</td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Cabin Baggage</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ data.cabinBaggage }}-kg</td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Duration</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ data.duration }}</td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Entertainment</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                @if(data.entertainment)
+                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">Yes</span>
+                                @else
+                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">No</span>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Total Seat</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ data.totalSeats }}</td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Occupied Seats</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ data.occupiedSeats }}</td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Available Seats</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ data.availableSeats }}</td>
+                        </tr>
+
+                    </table>
+                </div>
+                {{--  flight departure  --}}
+                <div class=" flex flex-col gap-2 border-2 rounded-lg w-2/6 px-4 py-2 shadow-md">
+                    <div class="flex flex-row gap-2 w-full font-bold text-gray-800 text-center justify-between">
+                        <span class="font-bold">Departure</span>
+                        <span class="font-bold">{{ data.departure.airport.name }}</span>
+                    </div>
+                    <hr>
+                    <table class="w-full divide-gray-200">
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Date</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800 flex flex-col">
+                                {{ new Date(data.departure.time).toISOString().split('T')[0] }}
+                            </td>
+                        </tr>                    
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Time</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800 flex flex-col">
+                                {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }}
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Airport Code</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ data.departure.airport.code }}</td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Airport Type</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                @if(data.departure.airport.type === 'Internasional')
+                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                                @else
+                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">City</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                <span class="font-bold">{{ data.departure.city.name }}</span>
+                                ({{ data.departure.city.code }})
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Country</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                <span class="font-bold">{{ data.departure.country.name }}</span>
+                                ({{ data.departure.country.code }})
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                {{--  flight arrival  --}}
+                <div class="flex flex-col gap-2 border-2 rounded-lg w-2/6 px-4 py-2 shadow-md">
+                    <div class="flex flex-row gap-2 w-full font-bold text-gray-800 text-center justify-between">
+                        <span class="font-bold">Arrival</span>
+                        <span class="font-bold">{{ data.arrival.airport.name }}</span>
+                    </div>
+                    <hr>
+                    <table class="w-full divide-gray-200">
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Date</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                {{ new Date(data.arrival.time).toISOString().split('T')[0] }}
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Time</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Airport Code</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">{{ data.arrival.airport.code }}</td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Airport Type</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                @if(data.arrival.airport.type === 'Internasional')
+                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                                @else
+                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">City</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                <span class="font-bold">{{ data.arrival.city.name }}</span>
+                                ({{ data.arrival.city.code }})
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-white even:bg-gray-100">
+                            <td class="px-6 py-2 whitespace-nowrap font-medium text-gray-800">Country</td>
+                            <td class="px-6 py-2 whitespace-nowrap text-gray-800">
+                                <span class="font-bold">{{ data.arrival.country.name }}</span>
+                                ({{ data.arrival.country.code }})
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @end
         
 
     </div>

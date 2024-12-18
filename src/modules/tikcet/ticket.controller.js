@@ -1,5 +1,12 @@
 import axios from "axios";
 
+const formatRupiah = (value) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(value);
+};
+
 export const index = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
@@ -23,10 +30,14 @@ export const detail = async (req, res, next) => {
     const id = req.params.id;
 
     const ticketDetailResponse = await axios.get(`${api}/api/v1/tickets/${id}`);
+    const ticket = {
+      ...ticketDetailResponse.data.data,
+      totalPrice: formatRupiah(ticketDetailResponse.data.data.totalPrice)
+    };
 
     const data = {  
       api: api,
-      ticket: ticketDetailResponse.data.data || {},
+      ticket,
     };
 
     res.edge("pages/ticket/detail", data);
