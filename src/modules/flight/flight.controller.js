@@ -50,12 +50,20 @@ export const detail = async (req, res, next) => {
 export const create = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
-    
+
+    const routesResponse = await axios.get(`${api}/api/v1/routes`);
+    const airplanesResponse = await axios.get(`${api}/api/v1/airplanes`);
+    const terminalsResponse = await axios.get(`${api}/api/v1/terminals`);
+
+
     const data = {
       api: api,
+      routes: routesResponse.data.data || [],
+      airplanes: airplanesResponse.data.data || [],
+      terminals: terminalsResponse.data.data || [],
     };
 
-    res.edge("pages/flight/create", data  )
+    res.edge("pages/flight/create", data);
   } catch (error) {
     next(error);
   }

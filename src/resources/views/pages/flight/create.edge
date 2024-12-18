@@ -10,66 +10,49 @@
     </div>
 
     <div class="flex flex-col gap-4 w-full border-2 border-gray-300 rounded-lg px-4 py-2 shadow-md">
-        <form action="">
+        <form id="flightForm" action="">
             <div class="flex flex-row gap-4 w-full py-4">
                 <div class="w-1/2">
-                    <label for="routeId" class="block mb-2 text-sm font-medium text-gray-900">Select a Route</label>
-                    <select id="routeId" name="routeId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
-                        <option value="" selected>Choose a Route</option>
-                        <option value="">Jakarta - Surabaya</option>
-                        <option value="">Jakarta - Surabaya</option>
-                    </select>
-                </div>
-                
-                <div class="w-1/2">
-                    <label for="routeId" class="block mb-2 text-sm font-medium text-gray-900">Select a Airline</label>
+                    <label for="routeId" class="block mb-2 text-sm font-medium text-gray-900">Route</label>
                     @component('components/ui/select-search', { 
-                        id: 'airlineId', 
-                        name: 'airlineId',
-                        placeholder: 'Choose a Airline'
+                        id: 'routeId', 
+                        name: 'routeId',
+                        placeholder: 'Choose a Routes'
                     })
                         @slot('content')
                             <option value="">Choose</option>
-                            <option value="AF" data-hs-select-option='{
-                            "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/af.png\" alt=\"Afghanistan\" />"}'>
-                            Afghanistan
+                            @each(data in routes)
+                                <option value="{{ data.id }}" class="flex flex-col">
+                                    <span class="text-sm">{{ data.DepartureAirport.name }} ({{ data.DepartureAirport.City.name }})</span>
+                                    <span class="text-sm"> - </span>
+                                    <span class="text-sm">{{ data.ArrivalAirport.name }} ({{ data.ArrivalAirport.City.name }})</span>
+                                </option>
+                            @end
+                        @end
+                    @end
+                </div>
+                <div class="w-1/2">
+                    <label for="routeId" class="block mb-2 text-sm font-medium text-gray-900">Airplane</label>
+                    @component('components/ui/select-search', { 
+                        id: 'airplaneId', 
+                        name: 'airplaneId',
+                        placeholder: 'Choose a Airplane'
+                    })
+                        @slot('content')
+                            <option value="">Choose</option>
+                            @each(data in airplanes)
+                            <option value="{{ data.id }}" data-hs-select-option='{
+                            "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"{{ data.Airline.imageUrl }}\" />"}'>
+                            {{ data.name }} ({{ data.Airline.name }})
                             </option>
-                            <option value="AX" data-hs-select-option='{
-                            "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/ax.png\" alt=\"Aland Islands\" />"}'>
-                            Aland Islands
-                            </option>
-                            <option value="AL" data-hs-select-option='{
-                            "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/al.png\" alt=\"Albania\" />"}'>
-                            Albania
-                            </option>
-                            <option value="DZ" data-hs-select-option='{
-                            "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/dz.png\" alt=\"Algeria\" />"}'>
-                            Algeria
-                            </option>
+                            @end
                         @end
                     @end
                 </div>   
-    
-                <div class="w-1/2">
-                    <label for="routeId" class="block mb-2 text-sm font-medium text-gray-900">Select a Class</label>
-                    @component('components/ui/select-multiple', { 
-                        id: 'classId', 
-                        name: 'classId',
-                        placeholder: 'Choose a Class'
-                    })
-                        @slot('content')
-                            <option value="">Choose</option>
-                            <option value="Economy">Economy</option>
-                            <option value="Premium_Economy">Premium_Economy</option>
-                            <option value="Business">Business</option>
-                            <option value="First_Class">First_Class</option>
-                        @end
-                    @end
-                </div>
             </div>
 
             <div class="flex flex-col gap-4 w-full py-2">
-                <div class="w-full flex flex-row gap-2">
+                <div class="w-full flex flex-row gap-4">
                     <div class="w-full flex flex-col gap-2">
                         <label for="departureTime"  class="block text-sm font-medium text-gray-900">Departure Time</label>
                         <input type="datetime-local" name="departureTime" id="departureTime" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5">  
@@ -78,8 +61,24 @@
                         <label for="arrivalTime"  class="block text-sm font-medium text-gray-900">Arrival Time</label>
                         <input type="datetime-local" name="arrivalTime" id="arrivalTime" class="w-full border-2 border-gray-300 rounded-lg px-4 py-2.5">  
                     </div>
+                    <div class="w-full">
+                        <label for="routeId" class="block mb-2 text-sm font-medium text-gray-900">Class</label>
+                        @component('components/ui/select-multiple', { 
+                            id: 'classId', 
+                            name: 'classId',
+                            placeholder: 'Choose a Class'
+                        })
+                            @slot('content')
+                                <option value="">Choose</option>
+                                <option value="Economy">Economy</option>
+                                <option value="Premium_Economy">Premium_Economy</option>
+                                <option value="Business">Business</option>
+                                <option value="First_Class">First_Class</option>
+                            @end
+                        @end
+                    </div>
                 </div>
-                <div class="w-full flex flex-row gap-2">
+                <div class="w-full flex flex-row gap-4">
                     <div class="w-full flex flex-col gap-2">
                         <label for="routeId" class="block text-sm font-medium text-gray-900">Departure Terminal</label>
                         @component('components/ui/select-search', { 
@@ -89,22 +88,11 @@
                         })
                             @slot('content')
                                 <option value="">Choose</option>
-                                <option value="AF" data-hs-select-option='{
-                                "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/af.png\" alt=\"Afghanistan\" />"}'>
-                                Afghanistan
-                                </option>
-                                <option value="AX" data-hs-select-option='{
-                                "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/ax.png\" alt=\"Aland Islands\" />"}'>
-                                Aland Islands
-                                </option>
-                                <option value="AL" data-hs-select-option='{
-                                "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/al.png\" alt=\"Albania\" />"}'>
-                                Albania
-                                </option>
-                                <option value="DZ" data-hs-select-option='{
-                                "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/dz.png\" alt=\"Algeria\" />"}'>
-                                Algeria
-                                </option>
+                                @each(data in terminals)
+                                    <option value="{{ data.id }}">
+                                    {{ data.name }} - ({{ data.Airport.name }}) - ({{ data.Airport.cityId }})
+                                    </option>
+                                @end
                             @end
                         @end
 
@@ -118,22 +106,11 @@
                         })
                             @slot('content')
                                 <option value="">Choose</option>
-                                <option value="AF" data-hs-select-option='{
-                                "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/af.png\" alt=\"Afghanistan\" />"}'>
-                                Afghanistan
-                                </option>
-                                <option value="AX" data-hs-select-option='{
-                                "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/ax.png\" alt=\"Aland Islands\" />"}'>
-                                Aland Islands
-                                </option>
-                                <option value="AL" data-hs-select-option='{
-                                "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/al.png\" alt=\"Albania\" />"}'>
-                                Albania
-                                </option>
-                                <option value="DZ" data-hs-select-option='{
-                                "icon": "<img class=\"inline-block size-4 rounded-full\" src=\"../assets/vendor/svg-country-flags/png100px/dz.png\" alt=\"Algeria\" />"}'>
-                                Algeria
-                                </option>
+                                @each(data in terminals)
+                                    <option value="{{ data.id }}">
+                                    {{ data.name }} - ({{ data.Airport.name }}) - ({{ data.Airport.cityId }})
+                                    </option>
+                                @end
                             @end
                         @end
 
@@ -177,21 +154,64 @@
 </div>
 
 <script>
+$(document).ready(function () {
+    $('#flightForm').on('submit', function (event) {
+        event.preventDefault();
 
-    const select = document.querySelector('select');
+        const formData = {
+            routeId: parseInt($('#routeId').val()),
+            airplaneId: parseInt($('#airplaneId').val()),
+            departureTime: formatToISOString($('#departureTime').val()),
+            arrivalTime: formatToISOString($('#arrivalTime').val()),
+            class: $('#classId').val(),
+            isActive: true,
+            baggage: parseInt($('#baggage').val()) || 20, // Default ke 20 jika kosong
+            cabinBaggage: parseInt($('#cabinBaggage').val()) || 7, // Default ke 7 jika kosong
+            entertainment: $('#entertainment').is(':checked'),
+            departureTerminalId: parseInt($('#departureTerminalId').val()),
+            arrivalTerminalId: parseInt($('#arrivalTerminalId').val()),
+        };
 
-    let selectedValues = [];
+        console.log("Form Data:", formData);
 
-    select.addEventListener('change', function() {
-        // Get all selected options
-        const selectedOptions = Array.from(this.selectedOptions);
-        
-        // Map the selected values
-        selectedValues = selectedOptions.map(option => option.value);
-        
-        console.log(selectedValues);
+        // Kirim data ke API
+        $.ajax({
+            url: '{{ api }}/api/v1/flights',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                if (response.success) {
+                    showToast("success", "Success", response.message || "Flight created successfully!");
+                    window.location.reload(); // Reload halaman setelah sukses
+                } else {
+                    // Tampilkan error jika ada
+                    let errorMessages = response.message || "An unexpected error occurred.";
+                    if (response.errors) {
+                        response.errors.forEach(error => {
+                            errorMessages += `${error.field}: ${error.message}\n`;
+                        });
+                    }
+                    showToast("error", "Error", errorMessages);
+                }
+            },
+            error: function (xhr) {
+                // Tangani kesalahan respons lainnya
+                const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
+                showToast("error", "Error", errorMessage);
+            }
+        });
     });
-</script>
+
+    // Format waktu ke ISO string
+    function formatToISOString(dateTime) {
+        const date = new Date(dateTime);
+        return date.toISOString();
+    }
+});
+
+    </script>
+    
 
 @endslot
 @end
