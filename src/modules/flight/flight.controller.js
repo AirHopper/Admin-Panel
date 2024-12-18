@@ -10,11 +10,13 @@ const formatRupiah = (value) => {
 export const index = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
+    const { token } = req;
     
     const flightsResponse = await axios.get(`${api}/api/v1/flights?limit=999999`);
 
     const data = {
       api: api,
+      token: token,
       flights: flightsResponse.data.data || [],
     };
 
@@ -28,6 +30,7 @@ export const detail = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
     const id = req.params.id;
+    const { token } = req;
 
     const flightDetailResponse = await axios.get(`${api}/api/v1/flights/${id}`);
     const flight = {
@@ -38,6 +41,7 @@ export const detail = async (req, res, next) => {
 
     const data = {
       api: api,
+      token: token,
       flight,
     };
 
@@ -50,6 +54,7 @@ export const detail = async (req, res, next) => {
 export const create = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
+    const { token } = req;
 
     const routesResponse = await axios.get(`${api}/api/v1/routes`);
     const airplanesResponse = await axios.get(`${api}/api/v1/airplanes`);
@@ -58,6 +63,7 @@ export const create = async (req, res, next) => {
 
     const data = {
       api: api,
+      token: token,
       routes: routesResponse.data.data || [],
       airplanes: airplanesResponse.data.data || [],
       terminals: terminalsResponse.data.data || [],

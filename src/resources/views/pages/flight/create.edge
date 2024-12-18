@@ -154,61 +154,67 @@
 </div>
 
 <script>
-$(document).ready(function () {
-    $('#flightForm').on('submit', function (event) {
-        event.preventDefault();
+    const token = '{{ token }}'
+    
+    $(document).ready(function () {
+        $('#flightForm').on('submit', function (event) {
+            event.preventDefault();
 
-        const formData = {
-            routeId: parseInt($('#routeId').val()),
-            airplaneId: parseInt($('#airplaneId').val()),
-            departureTime: formatToISOString($('#departureTime').val()),
-            arrivalTime: formatToISOString($('#arrivalTime').val()),
-            class: $('#classId').val(),
-            isActive: true,
-            baggage: parseInt($('#baggage').val()) || 20, // Default ke 20 jika kosong
-            cabinBaggage: parseInt($('#cabinBaggage').val()) || 7, // Default ke 7 jika kosong
-            entertainment: $('#entertainment').is(':checked'),
-            departureTerminalId: parseInt($('#departureTerminalId').val()),
-            arrivalTerminalId: parseInt($('#arrivalTerminalId').val()),
-        };
+            const formData = {
+                routeId: parseInt($('#routeId').val()),
+                airplaneId: parseInt($('#airplaneId').val()),
+                departureTime: formatToISOString($('#departureTime').val()),
+                arrivalTime: formatToISOString($('#arrivalTime').val()),
+                class: $('#classId').val(),
+                isActive: true,
+                baggage: parseInt($('#baggage').val()) || 20, // Default ke 20 jika kosong
+                cabinBaggage: parseInt($('#cabinBaggage').val()) || 7, // Default ke 7 jika kosong
+                entertainment: $('#entertainment').is(':checked'),
+                departureTerminalId: parseInt($('#departureTerminalId').val()),
+                arrivalTerminalId: parseInt($('#arrivalTerminalId').val()),
+            };
 
-        console.log("Form Data:", formData);
+            console.log("Form Data:", formData);
 
-        // Kirim data ke API
-        $.ajax({
-            url: '{{ api }}/api/v1/flights',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function (response) {
-                if (response.success) {
-                    showToast("success", "Success", response.message || "Flight created successfully!");
-                    window.location.reload(); // Reload halaman setelah sukses
-                } else {
-                    // Tampilkan error jika ada
-                    let errorMessages = response.message || "An unexpected error occurred.";
-                    if (response.errors) {
-                        response.errors.forEach(error => {
-                            errorMessages += `${error.field}: ${error.message}\n`;
-                        });
+            $.ajax({
+                url: '{{ api }}/api/v1/flights',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showToast("success", "Success", response.message || "Flight created successfully!");
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        // Tampilkan error jika ada
+                        let errorMessages = response.message || "An unexpected error occurred.";
+                        if (response.errors) {
+                            response.errors.forEach(error => {
+                                errorMessages += `${error.field}: ${error.message}\n`;
+                            });
+                        }
+                        showToast("error", "Error", errorMessages);
                     }
-                    showToast("error", "Error", errorMessages);
+                },
+                error: function (xhr) {
+                    // Tangani kesalahan respons lainnya
+                    const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
+                    showToast("error", "Error", errorMessage);
                 }
-            },
-            error: function (xhr) {
-                // Tangani kesalahan respons lainnya
-                const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
-                showToast("error", "Error", errorMessage);
-            }
+            });
         });
-    });
 
-    // Format waktu ke ISO string
-    function formatToISOString(dateTime) {
-        const date = new Date(dateTime);
-        return date.toISOString();
-    }
-});
+        // Format waktu ke ISO string
+        function formatToISOString(dateTime) {
+            const date = new Date(dateTime);
+            return date.toISOString();
+        }
+    });
 
     </script>
     
