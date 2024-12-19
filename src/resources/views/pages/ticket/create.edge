@@ -3,15 +3,147 @@
 
 <div class="px-6 py-4 w-full bg-white rounded-lg flex flex-col gap-2">
     <!-- Content Head -->
-    <div class="flex justify-start items-center mb-2">
+    <div class="flex flex-row justify-between items-center mb-2">
         <a href="/admin/ticket" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none">
             Back
         </a>
+        <div class="flex flex-row gap-x-2 items-center">
+            @component('components/ui/modal', {
+                title: 'Search Date',
+                buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
+                })
+                @slot('header')
+                    Search Date
+                @end
+                @slot('content')
+                <div class="flex flex-col gap-y-2">
+                    <form id="searchDateForm">
+                            <div class="w-full mb-3">
+                                <label for="departureDate" class="text-sm font-medium text-gray-900">Date</label>
+                                <input type="date" id="departureDate" name="departureDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+                            </div>
+                        <button type="button" onclick="searchDate()" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Search</button>
+                    </form>
+                </div>
+                @end
+            @end
+            @if(departureDate)
+                <h1 class="text-xl font-bold">Date : {{ departureDate }}</h1>
+            @endif
+        </div>
     </div>
-    <h1>Ticket Create</h1>
+    {{--  detail Route  --}}
+    <div class="flex w-full flex-row justify-between gap-x-2">
+        <div class="flex w-full flex-col gap-y-2 text-center border-2 rounded-lg">
+            <h1>Departure</h1>
+            <div class="flex flex-row gap-x-2 w-full justify-center items-center">
+                <h1>({{ route.departureAirportId }})</h1>
+                <h1 class="underline">{{ route.DepartureAirport.name }}</h1>
+                <h1 class="font-bold">{{ route.DepartureAirport.City.name }}</h1>
+            </div>
+        </div>
+        <div class="flex w-full flex-col gap-y-2 text-center border-2 rounded-lg">
+            <h1>Arrival</h1>
+            <div class="flex flex-row gap-x-2 w-full justify-center items-center">
+                <h1>({{ route.arrivalAirportId }})</h1>
+                <h1 class="underline">{{ route.ArrivalAirport.name }}</h1>
+                <h1 class="font-bold">{{ route.ArrivalAirport.City.name }}</h1>
+            </div>
+        </div>
+    </div>
+    {{--  List Flight  --}}
+    <div class="flex flex-col gap-y-2 w-full justify-center items-center">
+        <h1 class="text-xl font-bold">List Flight</h1>
+        @if(flightDepartureData.length || flightArrivalData.length > 0)
+        <div class="flex w-full justify-between flex-row gap-4">
+            {{--  Departure  --}}
+            @if(flightDepartureData.length > 0)
+            <div class="hs-accordion-group w-full flex flex-col gap-y-2" data-hs-accordion-always-open="">
+                @each(data in flightDepartureData)
+                    <div class="hs-accordion border-2 rounded-lg" id="hs-basic-always-open-heading-{{ data.id }}">
+                        <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4" aria-expanded="false" aria-controls="hs-basic-always-open-collapse-three">
+                            <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
+                            <div class="flex flex-col">
+                                <div>
+                                    {{ data.airline.name }} ( {{ data.departure.city.name }} - {{ data.arrival.city.name }} ) 
+                                </div>
+                                <div>
+                                    {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                                </div>
+                            </div>
+                        </button>
+                        <div id="hs-basic-always-open-collapse-three" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" role="region" aria-labelledby="hs-basic-always-open-heading-three">
+                            <p class="text-gray-800 ">
+                                <em>This is the first item's accordion body.</em> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions.
+                            </p>
+                        </div>
+                    </div>
+                @endeach
+              
+            </div>
+            @else
+                <div class="flex flex-col gap-y-2 w-full justify-center items-center">
+                    <h1 class="text-xl font-bold">No Flight Departure At this Date</h1>
+                </div>
+            @endif
 
+            {{--  Arrival  --}}
+            @if(flightArrivalData.length > 0)
+            <div class="hs-accordion-group w-full flex flex-col gap-y-2" data-hs-accordion-always-open="">
+                @each(data in flightArrivalData)
+                    <div class="hs-accordion border-2 rounded-lg" id="hs-basic-always-open-heading-{{ data.id }}">
+                        <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4" aria-expanded="false" aria-controls="hs-basic-always-open-collapse-three">
+                            <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
+                            <div class="flex flex-col">
+                                <div>
+                                    {{ data.airline.name }} ( {{ data.departure.city.name }} - {{ data.arrival.city.name }} ) 
+                                </div>
+                                <div>
+                                    {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                                </div>
+                            </div>
+                        </button>
+                        <div id="hs-basic-always-open-collapse-three" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" role="region" aria-labelledby="hs-basic-always-open-heading-three">
+                          <p class="text-gray-800 ">
+                            <em>This is the first item's accordion body.</em> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions.
+                          </p>
+                        </div>
+                    </div>
+                @endeach
+              
+            </div>
+            @else
+                <div class="flex flex-col gap-y-2 w-full justify-center items-center">
+                    <h1 class="text-xl font-bold">No Flight Arrival At this Date</h1>
+                </div>
+            @endif
+
+        </div>
+        @else
+            <div class="flex flex-col gap-y-2">
+                <h1 class="text-xl font-bold">Search Date First</h1>
+            </div>
+        @endif
+    </div>
 
 </div>
+
+
+<script>
+    function searchDate() {
+      const departureDate = document.getElementById('departureDate').value;
+      
+      const currentUrl = new URL(window.location.href);
+      
+      if (departureDate) {
+        currentUrl.searchParams.set('departureDate', departureDate);
+        
+        window.history.pushState({}, '', currentUrl);
+        
+        window.location.reload();
+      }
+    }
+  </script>  
 
 @endslot
 @end

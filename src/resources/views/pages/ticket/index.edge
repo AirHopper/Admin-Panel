@@ -9,39 +9,39 @@
                 title: 'Add Tiket',
                 buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
                 })
-                    @slot('header')
-                        Add Tiket
-                    @end
-                    @slot('content')
-                    <div class="flex flex-col gap-y-2">
-                        <span class="text-xs text-red-500">Just For Transit</span>
-                        <form id="searchTransitForm" action="">
-                            <div class="flex flex-col gap-x-2 w-full text-center">
-                                <div class="w-full mb-3">
-                                    <label for="departureId" class="text-sm font-medium text-gray-900">Departure</label>
-                                    <select id="departureId" name="departureId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
-                                        <option value="">Choose</option>
-                                        @each(data in airports)
-                                            <option value="{{ data.iataCode }}">{{ data.iataCode }} - {{ data.name }} ({{ data.City.name }})</option>
-                                        @end
-                                    </select>
-                                </div>
-                                <div class="w-full mb-3">
-                                    <label for="arrivalId" class="text-sm font-medium text-gray-900">Arrival</label>
-                                    <select id="arrivalId" name="arrivalId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
-                                        <option value="">Choose</option>
-                                        @each(data in airports)
-                                            <option value="{{ data.iataCode }}">{{ data.iataCode }} - {{ data.name }} ({{ data.City.name }})</option>
-                                        @end
-                                    </select>
-                                </div>
-                            </div>
-                            <button type="submit" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Search</button>
-                        </form>
-                    </div>
-
-                    @end
+                @slot('header')
+                    Add Tiket
                 @end
+                @slot('content')
+                <div class="flex flex-col gap-y-2">
+                    <span class="text-xs text-red-500">Just For Transit</span>
+                    <form id="searchTransitForm" action="">
+                        <div class="flex flex-col gap-x-2 w-full text-center">
+                            <div class="w-full mb-3">
+                                <label for="departureId" class="text-sm font-medium text-gray-900">Departure</label>
+                                <select id="departureId" name="departureId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+                                    <option value="">Choose</option>
+                                    @each(data in airports)
+                                        <option value="{{ data.iataCode }}">{{ data.City.name }} - ({{ data.iataCode }}) {{ data.name }}</option>
+                                    @end
+                                </select>
+                            </div>
+                            <div class="w-full mb-3">
+                                <label for="arrivalId" class="text-sm font-medium text-gray-900">Arrival</label>
+                                <select id="arrivalId" name="arrivalId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+                                    <option value="">Choose</option>
+                                    @each(data in airports)
+                                        <option value="{{ data.iataCode }}">{{ data.City.name }} - ({{ data.iataCode }}) {{ data.name }}</option>
+                                    @end
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Search</button>
+                    </form>
+                </div>
+
+                @end
+            @end
         </div>
     </div>
     
@@ -161,7 +161,7 @@
                     const { id, departureAirportId, arrivalAirportId, distance } = response.data;
                     showToast("success", "Success", `Route fetched successfully. Distance: ${distance} km`);
                     setTimeout(() => {
-                        window.location.href = `/admin/ticket/create?departureAirport=${departureAirportId}&arrivalAirport=${arrivalAirportId}`;
+                        window.location.href = `/admin/ticket/create?routeId=${id}`;
                     }, 1000);
                 } else {
                     showToast("error", "Error", response.message || "An unexpected error occurred.");
