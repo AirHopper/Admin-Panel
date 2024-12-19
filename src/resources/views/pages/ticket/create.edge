@@ -58,29 +58,66 @@
         <div class="flex w-full justify-between flex-row gap-4">
             {{--  Departure  --}}
             @if(flightDepartureData.length > 0)
-            <div class="hs-accordion-group w-full flex flex-col gap-y-2" data-hs-accordion-always-open="">
-                @each(data in flightDepartureData)
-                    <div class="hs-accordion border-2 rounded-lg" id="hs-basic-always-open-heading-{{ data.id }}">
-                        <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4" aria-expanded="false" aria-controls="hs-basic-always-open-collapse-three">
-                            <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
-                            <div class="flex flex-col">
-                                <div>
-                                    {{ data.airline.name }} ( {{ data.departure.city.name }} - {{ data.arrival.city.name }} ) 
+                <div class="hs-accordion-group w-full flex flex-col gap-y-2" data-hs-accordion-always-open="">
+                    @each(data in flightDepartureData)
+                        <div class="hs-accordion border-2 rounded-lg" id="hs-basic-always-open-heading-{{ data.id }}">
+                            <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4" aria-expanded="false" aria-controls="hs-basic-always-open-collapse-three">
+                                <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
+                                <div class="flex flex-col">
+                                    <div>
+                                        {{ data.airline.name }} ( {{ data.departure.city.name }} - {{ data.arrival.city.name }} ) 
+                                    </div>
+                                    <div>
+                                        {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                                    </div>
                                 </div>
-                                <div>
-                                    {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                            </button>
+                            <div id="hs-basic-always-open-collapse-three" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" role="region" aria-labelledby="hs-basic-always-open-heading-three">
+                                <div class="flex flex-col border-t-2 gap-2 w-full px-4 py-2 shadow-md">
+                                    <table class="w-full divide-gray-200">
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Total Seat</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.totalSeats }}</td>
+                                        </tr>                                        
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Available Seat</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.availableSeats }}</td>
+                                        </tr>
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Departure Airport</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.departure.airport.name }}</td>
+                                        </tr>
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Departure Airport Type</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                                                @if(data.departure.airport.type === 'Internasional')
+                                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                                                @else
+                                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Arrival Airport</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.arrival.airport.name }}</td>
+                                        </tr>
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Arrival Airport Type</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                                                @if(data.arrival.airport.type === 'Internasional')
+                                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                                                @else
+                                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
-                        </button>
-                        <div id="hs-basic-always-open-collapse-three" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" role="region" aria-labelledby="hs-basic-always-open-heading-three">
-                            <p class="text-gray-800 ">
-                                <em>This is the first item's accordion body.</em> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions.
-                            </p>
                         </div>
-                    </div>
-                @endeach
-              
-            </div>
+                    @endeach
+                
+                </div>
             @else
                 <div class="flex flex-col gap-y-2 w-full justify-center items-center">
                     <h1 class="text-xl font-bold">No Flight Departure At this Date</h1>
@@ -89,29 +126,69 @@
 
             {{--  Arrival  --}}
             @if(flightArrivalData.length > 0)
-            <div class="hs-accordion-group w-full flex flex-col gap-y-2" data-hs-accordion-always-open="">
-                @each(data in flightArrivalData)
-                    <div class="hs-accordion border-2 rounded-lg" id="hs-basic-always-open-heading-{{ data.id }}">
-                        <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4" aria-expanded="false" aria-controls="hs-basic-always-open-collapse-three">
-                            <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
-                            <div class="flex flex-col">
-                                <div>
-                                    {{ data.airline.name }} ( {{ data.departure.city.name }} - {{ data.arrival.city.name }} ) 
-                                </div>
-                                <div>
-                                    {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                <div class="hs-accordion-group w-full flex flex-col gap-y-2" data-hs-accordion-always-open="">
+                    @each(data in flightArrivalData)
+                        <div class="hs-accordion border-2 rounded-lg" id="hs-basic-always-open-heading-{{ data.id }}">
+                            <div class="flex flex-row gap-x-2 w-full justify-center items-center pr-4">
+                                <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4" aria-expanded="false" aria-controls="hs-basic-always-open-collapse-three">
+                                    <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
+                                    <div class="flex flex-col">
+                                        <div>
+                                            {{ data.airline.name }} ( {{ data.departure.city.name }} - {{ data.arrival.city.name }} ) 
+                                        </div>
+                                        <div>
+                                            {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
+                                        </div>
+                                    </div>
+                                </button>
+                                <h1>{{ data.id }}</h1>
+                            </div>
+                            <div id="hs-basic-always-open-collapse-three" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" role="region" aria-labelledby="hs-basic-always-open-heading-three">
+                                <div class="flex flex-col border-t-2 gap-2 w-full px-4 py-2 shadow-md">
+                                    <table class="w-full divide-gray-200">
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Total Seat</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.totalSeats }}</td>
+                                        </tr>                                        
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Available Seat</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.availableSeats }}</td>
+                                        </tr>
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Departure Airport</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.departure.airport.name }}</td>
+                                        </tr>
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Departure Airport Type</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                                                @if(data.departure.airport.type === 'Internasional')
+                                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                                                @else
+                                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Arrival Airport</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.arrival.airport.name }}</td>
+                                        </tr>
+                                        <tr class="odd:bg-white even:bg-gray-100">
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Arrival Airport Type</td>
+                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
+                                                @if(data.arrival.airport.type === 'Internasional')
+                                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
+                                                @else
+                                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
-                        </button>
-                        <div id="hs-basic-always-open-collapse-three" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" role="region" aria-labelledby="hs-basic-always-open-heading-three">
-                          <p class="text-gray-800 ">
-                            <em>This is the first item's accordion body.</em> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions.
-                          </p>
                         </div>
-                    </div>
-                @endeach
-              
-            </div>
+                    @endeach
+                
+                </div>
             @else
                 <div class="flex flex-col gap-y-2 w-full justify-center items-center">
                     <h1 class="text-xl font-bold">No Flight Arrival At this Date</h1>
