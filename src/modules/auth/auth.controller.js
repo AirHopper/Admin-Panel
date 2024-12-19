@@ -4,7 +4,14 @@ export const loginPage = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
 
-    res.edge("pages/auth/login", { api });
+    const airlineResponse = await axios.get(`${api}/api/v1/airlines/randomLogo`);
+
+    const data = {
+      api: api,
+      airline: airlineResponse.data.data,
+    };
+
+    res.edge("pages/auth/login", data);
   } catch (error) {
     next(error);
   }
