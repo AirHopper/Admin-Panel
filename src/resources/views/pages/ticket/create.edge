@@ -51,6 +51,29 @@
             </div>
         </div>
     </div>
+
+{{-- Selected Flights Display --}}
+<div id="selectedFlights" class="flex flex-col gap-2 w-full justify-center items-center hidden">
+    <h2 class="font-bold">Selected Flights:</h2>
+    <div class="flex flex-row gap-x-2 w-full justify-center items-center">
+        <div id="firstFlightDisplay" class="flex flex-col gap-y-2 w-full justify-center items-center"></div>
+        <div id="secondFlightDisplay" class="flex flex-col gap-y-2 w-full justify-center items-center"></div>
+        <div class="w-full hidden" id="discountDropdown">
+            <select id="discountId" name="discountId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+                <option value="">No Discount</option>
+                @each(data in discounts)
+                    <option value="{{ data.id }}">{{ data.percentage }} %</option>
+                @end
+            </select>
+        </div>
+        <button id="createButton" class="rounded-lg hidden py-2 px-4 bg-green-500 text-white" onclick="createTicket()">Create</button>
+    </div>
+</div>
+
+{{-- Submit Button --}}
+<button onclick="lockSelection()" class="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg">Lock Selection</button>
+
+
     {{--  List Flight  --}}
     <div class="flex flex-col gap-y-2 w-full justify-center items-center">
         <h1 class="text-xl font-bold">List Flight</h1>
@@ -58,10 +81,11 @@
         <div class="flex w-full justify-between flex-row gap-4">
             {{--  Departure  --}}
             @if(flightDepartureData.length > 0)
-                <div class="hs-accordion-group w-full flex flex-col gap-y-2" data-hs-accordion-always-open="">
+                <div class="w-full flex flex-col gap-y-2">
                     @each(data in flightDepartureData)
                         <div class="hs-accordion border-2 rounded-lg" id="hs-basic-always-open-heading-{{ data.id }}">
-                            <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4" aria-expanded="false" aria-controls="hs-basic-always-open-collapse-three">
+                            <div class="flex flex-row gap-x-2 w-full justify-center items-center pr-4"> 
+                                <div class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4">
                                 <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
                                 <div class="flex flex-col">
                                     <div>
@@ -71,47 +95,12 @@
                                         {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
                                     </div>
                                 </div>
-                            </button>
-                            <div id="hs-basic-always-open-collapse-three" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" role="region" aria-labelledby="hs-basic-always-open-heading-three">
-                                <div class="flex flex-col border-t-2 gap-2 w-full px-4 py-2 shadow-md">
-                                    <table class="w-full divide-gray-200">
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Total Seat</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.totalSeats }}</td>
-                                        </tr>                                        
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Available Seat</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.availableSeats }}</td>
-                                        </tr>
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Departure Airport</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.departure.airport.name }}</td>
-                                        </tr>
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Departure Airport Type</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                                                @if(data.departure.airport.type === 'Internasional')
-                                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
-                                                @else
-                                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Arrival Airport</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.arrival.airport.name }}</td>
-                                        </tr>
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Arrival Airport Type</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                                                @if(data.arrival.airport.type === 'Internasional')
-                                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
-                                                @else
-                                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    </table>
+                                </div>
+                                <div class="flex flex-col gap-y-2 justify-center items-center">
+                                    <h1>{{ data.id }}</h1>
+                                    <div class="flex">
+                                        <input type="radio" name="firstFlight" id="firstFlight{{ data.id }}" value="{{ data.id }}" onclick="updateSelection('first', '{{ data.id }}')">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -128,9 +117,9 @@
             @if(flightArrivalData.length > 0)
                 <div class="hs-accordion-group w-full flex flex-col gap-y-2" data-hs-accordion-always-open="">
                     @each(data in flightArrivalData)
-                        <div class="hs-accordion border-2 rounded-lg" id="hs-basic-always-open-heading-{{ data.id }}">
+                        <div class="hs-accordion border-2 rounded-lg">
                             <div class="flex flex-row gap-x-2 w-full justify-center items-center pr-4">
-                                <button class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4" aria-expanded="false" aria-controls="hs-basic-always-open-collapse-three">
+                                <div class="hs-accordion-toggle hs-accordion-active:text-blue-600 py-3 inline-flex items-center gap-x-3 w-full font-semibold text-start text-gray-800 hover:text-gray-500 focus:outline-none focus:text-gray-500 rounded-lg disabled:opacity-50 disabled:pointer-events-none px-4">
                                     <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
                                     <div class="flex flex-col">
                                         <div>
@@ -140,49 +129,12 @@
                                             {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
                                         </div>
                                     </div>
-                                </button>
-                                <h1>{{ data.id }}</h1>
-                            </div>
-                            <div id="hs-basic-always-open-collapse-three" class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300" role="region" aria-labelledby="hs-basic-always-open-heading-three">
-                                <div class="flex flex-col border-t-2 gap-2 w-full px-4 py-2 shadow-md">
-                                    <table class="w-full divide-gray-200">
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Total Seat</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.totalSeats }}</td>
-                                        </tr>                                        
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Available Seat</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.availableSeats }}</td>
-                                        </tr>
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Departure Airport</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.departure.airport.name }}</td>
-                                        </tr>
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Departure Airport Type</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                                                @if(data.departure.airport.type === 'Internasional')
-                                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
-                                                @else
-                                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Arrival Airport</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">{{ data.arrival.airport.name }}</td>
-                                        </tr>
-                                        <tr class="odd:bg-white even:bg-gray-100">
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm font-medium text-gray-800">Arrival Airport Type</td>
-                                            <td class="px-6 py-2 whitespace-nowrap text-sm text-gray-800">
-                                                @if(data.arrival.airport.type === 'Internasional')
-                                                    <span class="bg-green-300 rounded-full text-xs px-2 py-1 shadow-md">International</span>
-                                                @else
-                                                    <span class="bg-red-300 rounded-full text-xs px-2 py-1 shadow-md">Domestic</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    </table>
+                                </div>
+                                <div class="flex flex-col gap-y-2 justify-center items-center">
+                                    <h1>{{ data.id }}</h1>
+                                    <div class="flex">
+                                        <input type="radio" name="secondFlight" id="secondFlight{{ data.id }}" value="{{ data.id }}" onclick="updateSelection('second', '{{ data.id }}')">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -207,6 +159,97 @@
 
 
 <script>
+    const routeId = {{ routeId }};
+    const api = "{{ api }}";
+    const token = '{{ token }}';
+    let firstFlightId = null;
+    let secondFlightId = null;
+
+    // Update selection in real-time
+    function updateSelection(type, id) {
+        if (type === 'first') {
+            firstFlightId = id;
+            document.getElementById('firstFlightDisplay').innerText = `First Flight ID: ${firstFlightId}`;
+        } else if (type === 'second') {
+            secondFlightId = id;
+            document.getElementById('secondFlightDisplay').innerText = `Second Flight ID: ${secondFlightId}`;
+        }
+    }
+
+    // Lock selection
+    function lockSelection() {
+        if (!firstFlightId || !secondFlightId) {
+            alert('Please select one flight for both First and Second.');
+            return;
+        }
+
+        // Show Selected Flights Section
+        document.getElementById('selectedFlights').classList.remove('hidden');
+
+        // Show Discount Dropdown and Create Button
+        document.getElementById('discountDropdown').classList.remove('hidden');
+        document.getElementById('createButton').classList.remove('hidden');
+    }
+
+    // Create Ticket
+    function createTicket() {
+        // Ambil nilai flight ID dari radio button yang dipilih
+        const firstFlightId = document.querySelector('input[name="firstFlight"]:checked')?.value;
+        const secondFlightId = document.querySelector('input[name="secondFlight"]:checked')?.value;
+
+        if (!firstFlightId || !secondFlightId) {
+            alert('Please select one flight for both First and Second.');
+            return;
+        }
+
+        // Ambil nilai discount ID dari dropdown
+        const discountIdValue = document.getElementById('discountId')?.value;
+
+        // Siapkan payload data
+        const formData = {
+            routeId: routeId, // Ganti dengan routeId yang sesuai
+            flightIds: [parseInt(firstFlightId), parseInt(secondFlightId)],
+            ...(discountIdValue ? { discountId: parseInt(discountIdValue) } : {}) // Opsional
+        };
+
+        console.log(token);
+        console.log('Payload Data:', formData); // Debug log untuk memastikan format data benar
+
+        $.ajax({
+                url: '{{ api }}/api/v1/tickets',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showToast("success", "Success", response.message || "Ticket created successfully!");
+                        // setTimeout(() => {
+                        //     window.location.reload();
+                        // }, 1000);
+                    } else {
+                        let errorMessages = response.message || "An unexpected error occurred.";
+                        if (response.errors) {
+                            response.errors.forEach(error => {
+                                errorMessages += `${error.field}: ${error.message}\n`;
+                            });
+                        }
+                        showToast("error", "Error", errorMessages);
+                    }
+                },
+                error: function (xhr) {
+                    // Tangani kesalahan respons lainnya
+                    const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
+                    showToast("error", "Error", errorMessage);
+                }
+            });
+    }
+
+</script>
+
+<script>
     function searchDate() {
       const departureDate = document.getElementById('departureDate').value;
       
@@ -220,6 +263,45 @@
         window.location.reload();
       }
     }
+
+    // function lockSelection() {
+    //     const firstFlightId = document.querySelector('input[name="firstFlight"]:checked')?.value;
+    //     const secondFlightId = document.querySelector('input[name="secondFlight"]:checked')?.value;
+        
+    //     if (!firstFlightId || !secondFlightId) {
+    //         alert('Please select one flight for both First and Second.');
+    //         return;
+    //     }
+
+    //     // Display selected flights
+    //     document.getElementById('firstFlightDisplay').innerText = `First Flight ID: ${firstFlightId}`;
+    //     document.getElementById('secondFlightDisplay').innerText = `Second Flight ID: ${secondFlightId}`;
+
+    //     // Prepare data for POST request
+    //     const data = {
+    //         routeId: 10, // Replace with your actual routeId
+    //         flightIds: [firstFlightId, secondFlightId]
+    //         // Optional: discountId if needed
+    //     };
+
+        // Send data via POST (you can replace with your actual endpoint)
+        // fetch('/your-endpoint', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(data),
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     console.log('Success:', data);
+        //     alert('Ticket created successfully!');
+        // })
+        // .catch((error) => {
+        //     console.error('Error:', error);
+        //     alert('An error occurred.');
+        // });
+    // }
   </script>  
 
 @endslot

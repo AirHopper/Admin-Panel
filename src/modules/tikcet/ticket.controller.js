@@ -53,7 +53,7 @@ export const detail = async (req, res, next) => {
 export const create = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
-    const token = req.cookies.token;
+    const {token} = req;
     const routeId = req.query.routeId;
     const departureDate = req.query.departureDate;
 
@@ -71,14 +71,22 @@ export const create = async (req, res, next) => {
       const flightArrivalResponse = await axios.get(`${api}/api/v1/flights?limit=999999&search[arrivalAirport]=${arrivalAirport}&search[flightDate]=${departureDate}`);
       flightArrivalData = flightArrivalResponse.data.data;
     }
+    const discountsResponse = await axios.get(`${api}/api/v1/discounts`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log({flightDepartureData, flightArrivalData});
 
     const data = {
       api: api,
       token: token,
+      routeId: routeId,
       departureDate: departureDate,
       route: routeResponse.data.data,
       flightDepartureData,
       flightArrivalData,
+      discounts: discountsResponse.data.data,
     };
 
     res.edge("pages/ticket/create", data);
