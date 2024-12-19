@@ -10,12 +10,16 @@ const formatRupiah = (value) => {
 export const index = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
+    const token = req.cookies.token;
 
     const tiketResponse = await axios.get(`${api}/api/v1/tickets?limit=999999`);  
+    const airPortResponse = await axios.get(`${api}/api/v1/airports`);
 
     const data = {
       api: api,
+      token: token,
       tickets: tiketResponse.data.data || [],
+      airports: airPortResponse.data.data || [],
     };
 
     res.edge("pages/ticket/index", data);
@@ -41,6 +45,15 @@ export const detail = async (req, res, next) => {
     };
 
     res.edge("pages/ticket/detail", data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const create = async (req, res, next) => {
+  try {
+
+    res.edge("pages/ticket/create");
   } catch (error) {
     next(error);
   }

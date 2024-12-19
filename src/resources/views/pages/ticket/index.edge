@@ -15,17 +15,29 @@
                     @slot('content')
                     <div class="flex flex-col gap-y-2">
                         <span class="text-xs text-red-500">Just For Transit</span>
-                        <div class="flex flex-row gap-x-2 w-full text-center">
-                            <div class="flex flex-col gap-y-2 w-full">
-                                <label for="searchTransit" class="text-sm font-medium text-gray-900">From</label>
-                                <input type="text" id="searchTransit" class="w-full p-2 rounded-lg border border-gray-300" placeholder="Search Transit">
+                        <form id="searchTransitForm" action="">
+                            <div class="flex flex-col gap-x-2 w-full text-center">
+                                <div class="w-full mb-3">
+                                    <label for="departureId" class="text-sm font-medium text-gray-900">Departure</label>
+                                    <select id="departureId" name="departureId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+                                        <option value="">Choose</option>
+                                        @each(data in airports)
+                                            <option value="{{ data.iataCode }}">{{ data.iataCode }} - {{ data.name }} ({{ data.City.name }})</option>
+                                        @end
+                                    </select>
+                                </div>
+                                <div class="w-full mb-3">
+                                    <label for="arrivalId" class="text-sm font-medium text-gray-900">Arrival</label>
+                                    <select id="arrivalId" name="arrivalId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
+                                        <option value="">Choose</option>
+                                        @each(data in airports)
+                                            <option value="{{ data.iataCode }}">{{ data.iataCode }} - {{ data.name }} ({{ data.City.name }})</option>
+                                        @end
+                                    </select>
+                                </div>
                             </div>
-                            <div class="flex flex-col gap-y-2 w-full">
-                                <label for="searchTransit" class="text-sm font-medium text-gray-900">To</label>
-                                <input type="text" id="searchTransit" class="w-full p-2 rounded-lg border border-gray-300" placeholder="Search Transit">
-                            </div>
-                        </div>
-                        <a href="#" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Search</a>
+                            <button type="submit" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Search</button>
+                        </form>
                     </div>
 
                     @end
@@ -120,6 +132,49 @@
         </table>
     </div>
 </div>
+
+<script>
+    const api = '{{ api }}'
+    const token = '{{ token }}'
+
+    $(document).ready(function () {
+    $('#searchTransitForm').on('submit', function (event) {
+        event.preventDefault();
+
+        const departureId = $('#departureId').val();
+        const arrivalId = $('#arrivalId').val();
+
+        if (!departureId || !arrivalId) {
+            showToast("error", "Validation Error", "Please select both Departure and Arrival airports.");
+            return;
+        }
+
+        $.ajax({
+            url: `${api}/api/v1/routes/${departureId}/${arrivalId}`,
+            method: 'GET',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            success: function (response) {
+                if (response.success) {
+                    const { id, departureAirportId, arrivalAirportId, distance } = response.data;
+                    showToast("success", "Success", `Route fetched successfully. Distance: ${distance} km`);
+                    setTimeout(() => {
+                        window.location.href = `/admin/ticket/create?departureAirport=${departureAirportId}&arrivalAirport=${arrivalAirportId}`;
+                    }, 1000);
+                } else {
+                    showToast("error", "Error", response.message || "An unexpected error occurred.");
+                }
+            },
+            error: function (xhr) {
+                const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
+                showToast("error", "Error", errorMessage);
+            }
+            });
+        });
+    });
+</script>
 
 @endslot
 @end
