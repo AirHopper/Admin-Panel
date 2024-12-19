@@ -1,0 +1,185 @@
+@layout.app({ title: "User List" })
+@slot('main')
+
+<div class="px-6 py-2 w-full bg-white rounded-lg">
+    <!-- Content Head -->
+    <div class="flex justify-end items-center mb-2">
+        @component('components/ui/modal', {
+            title: 'Add Discount',
+            buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none',
+            })
+            @slot('header')
+                Add Discount
+            @end
+            @slot('content')
+
+                <form id="adminAddForm" class="max-w-sm mx-auto">
+                    <div class="mb-5">
+                        <label for="percentage" class="block mb-2 text-sm font-medium text-gray-900">Percentage</label>
+                        <input type="number" id="percentage" name="percentage" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="75" required />
+                    </div>
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Add Dscount</button>
+                </form>
+
+            @end
+        @end
+    </div>
+    
+    <div class="border-2 rounded-lg p-4 overflow-x-auto text-sm">
+        <table class="myTable display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Percentage</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @each((data, index) in discounts)
+                    <tr>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ data.percentage }} %</td>
+                        <td>
+                            <div class="flex justify-center items-center gap-2">
+                                @component('components/ui/modal', {
+                                    title: 'Edit Discount',
+                                    buttonClass: 'bg-blue-500 text-white px-2 py-1 rounded-md',
+                                    })
+                                    @slot('header')
+                                        Edit
+                                    @end
+                                    @slot('content')
+
+                                        <form id="adminEditForm" class="max-w-sm mx-auto">
+                                            <div class="mb-5">
+                                                <label for="percentageEdit" class="block mb-2 text-sm font-medium text-gray-900">Percentage</label>
+                                                <input type="number" id="percentageEdit-{{ data.id }}" name="percentageEdit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" value="{{ data.percentage }}" required />
+                                            </div>
+                                            <button type="button" onclick="editDiscount({{ data.id }})" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Edit Dscount</button>
+                                        </form>
+
+                                    @end
+                                @end
+                            <button type="button" onclick="deleteDiscount({{ data.id }})" class="bg-red-500 text-white px-2 py-1 rounded-md">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                @else
+                    <tr>
+                        <td colspan="3" class="text-center">No data available</td>
+                    </tr>
+                @end
+            </tbody>
+            
+        </table>
+    </div>
+</div>
+    
+<script>
+    const token = '{{ token }}'
+
+    function editDiscount(id) {
+    const percentageEdit = $(`#percentageEdit-${id}`).val();
+
+        $.ajax({
+            url: '{{ api }}/api/v1/discounts/' + id,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                percentage: parseInt(percentageEdit),
+            }),
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            success: function (response) {
+                showToast("success", "Success", "Discount edited successfully!");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            },
+            error: function (xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorMessages = '';
+                    errors.forEach(error => {
+                        errorMessages += `${error.field}: ${error.message}\n`;
+                    });
+                    showToast("error", "Error", errorMessages);
+                } else {
+                    showToast("error", "Error", "An error occurred. Please try again.");
+                }
+            },
+        });
+    }
+
+
+    function deleteDiscount(id) {
+        $.ajax({
+            url: '{{ api }}/api/v1/discounts/' + id,
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            success: function (response) {
+                showToast("success", "Success", "Discount deleted successfully!");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            },
+            error: function (xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorMessages = '';
+                    errors.forEach(error => {
+                        errorMessages += `${error.field}: ${error.message}\n`;
+                    });
+                    showToast("error", "Error", errorMessages);
+                } else {
+                    showToast("error", "Error", "An error occurred. Please try again.");
+                }
+            },
+        });
+    }
+
+    $(document).ready(function () {
+        $('#adminAddForm').on('submit', function (e) {
+            e.preventDefault(); 
+
+            const formData = {
+                percentage: parseInt($('#percentage').val()),
+            };
+
+            $.ajax({
+                url: '{{ api }}/api/v1/discounts',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                success: function (response) {
+                    showToast("success", "Success", "Discount created successfully!");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                },
+                error: function (xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        const errors = xhr.responseJSON.errors;
+                        let errorMessages = '';
+                        errors.forEach(error => {
+                            errorMessages += `${error.field}: ${error.message}\n`;
+                        });
+                        showToast("error", "Error", errorMessages);
+                    } else {
+                        showToast("error", "Error", "An error occurred. Please try again.");
+                    }
+                },
+            });
+        });
+    });
+
+</script>
+    
+@endslot
+@end

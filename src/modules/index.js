@@ -8,6 +8,7 @@ import airlineRoutes from "./airline/airline.routes.js";
 import flightRoutes from "./flight/flight.routes.js";
 import ticketRoutes from "./tikcet/ticket.routes.js";
 import userRoutes from "./user/user.routes.js";
+import discountRoutes from "./discount/discount.routes.js";
 
 export default (app) => {
   const router = Router();
@@ -29,4 +30,5 @@ export default (app) => {
   flightRoutes(router);
   ticketRoutes(router);
   userRoutes(router);
+  discountRoutes(router);
 };
