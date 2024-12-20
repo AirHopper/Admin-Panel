@@ -197,27 +197,27 @@
                 headers: {
                     'Authorization': `Bearer ${token}`
                 },
-                // success: function (response) {
-                //     if (response.success) {
-                //         showToast("success", "Success", response.message || "Flight created successfully!");
-                //         setTimeout(() => {
-                //             window.location.reload();
-                //         }, 1000);
-                //     } else {
-                //         let errorMessages = response.message || "An unexpected error occurred.";
-                //         if (response.errors) {
-                //             response.errors.forEach(error => {
-                //                 errorMessages += `${error.field}: ${error.message}\n`;
-                //             });
-                //         }
-                //         showToast("error", "Error", errorMessages);
-                //     }
-                // },
-                // error: function (xhr) {
-                //     // Tangani kesalahan respons lainnya
-                //     const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
-                //     showToast("error", "Error", errorMessage);
-                // }
+                success: function (response) {
+                    if (response.success) {
+                        showToast("success", "Success", response.message || "Flight created successfully!");
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        let errorMessages = response.message || "An unexpected error occurred.";
+                        if (response.errors) {
+                            response.errors.forEach(error => {
+                                errorMessages += `${error.field}: ${error.message}\n`;
+                            });
+                        }
+                        showToast("error", "Error", errorMessages);
+                    }
+                },
+                error: function (xhr) {
+                    // Tangani kesalahan respons lainnya
+                    const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
+                    showToast("error", "Error", errorMessage);
+                }
             });
         });
 
