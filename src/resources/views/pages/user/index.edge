@@ -37,6 +37,7 @@
                         <th>Email</th>
                         <th>Role</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody class="text-center">
@@ -93,6 +94,29 @@
                                     <span class="bg-red-500 text-white px-2 py-1 rounded-md">Inactive</span>
                                 @endif
                             </td>
+                            <td>
+                                <div class="flex flex-row gap-x-2">
+                                    @component('components/ui/modal', {
+                                        title: 'Delete Account',
+                                        buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-300 text-red-800 hover:bg-red-400 focus:outline-none focus:bg-red-200 disabled:opacity-50 disabled:pointer-events-none',
+                                        })
+                                        @slot('header')
+                                            Delete
+                                        @end
+                                        @slot('content')
+                                        <div class="flex flex-col gap-y-2 text-center">
+                                            <h1 class="text-sm text-red-700">Are you sure you want to delete this Account?</h1>
+                                            <h1 class="text-sm text-gray-900 font-bold">{{ user.email }}</h1>
+                                            <div class="flex flex-row gap-x-2">
+                                                <button type="button" onclick="deleteAccount('{{ user.id }}')" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-300 text-red-800 hover:bg-red-400 focus:outline-none focus:bg-red-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Delete</button>
+                                                <button type="button" @click="modalOpen=false" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Cancel</button>
+                                            </div>
+                                        </div>
+                                        
+                                        @end
+                                    @end
+                                </div>
+                            </td>
                         </tr>
                     @else
                         <tr>
@@ -106,6 +130,9 @@
     </div>
     
     <script>
+
+        const token = '{{ token }}'
+
         $(document).ready(function () {
         $('#adminAddForm').on('submit', function (e) {
             e.preventDefault(); 
@@ -115,8 +142,6 @@
                 password: $('#password').val(),
             };
             
-            const token = '{{ token }}'
-    
             $.ajax({
                 url: '{{ api }}/api/v1/auth/admin/register',
                 method: 'POST',
@@ -132,20 +157,50 @@
                     }, 1000);
                 },
                 error: function (xhr) {
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
-                        const errors = xhr.responseJSON.errors;
-                        let errorMessages = '';
-                        errors.forEach(error => {
-                            errorMessages += `${error.field}: ${error.message}\n`;
-                        });
-                        showToast("error", "Error", errorMessages);
-                    } else {
-                        showToast("error", "Error", "An error occurred. Please try again.");
-                    }
-                },
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            const errors = xhr.responseJSON.errors;
+                            let errorMessages = '';
+                            errors.forEach(error => {
+                                errorMessages += `${error.field}: ${error.message}\n`;
+                            });
+                            showToast("error", "Error", errorMessages);
+                        } else {
+                            showToast("error", "Error", "An error occurred. Please try again.");
+                        }
+                    },
+                });
             });
         });
-    });
+
+        function deleteAccount(id) {
+            $.ajax({
+            url: '{{ api }}/api/v1/users/' + id,
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            success: function (response) {
+                showToast("success", "Success", "Account deleted successfully!");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            },
+            error: function (xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorMessages = '';
+                    errors.forEach(error => {
+                        errorMessages += `${error.field}: ${error.message}\n`;
+                    });
+                    showToast("error", "Error", errorMessages);
+                } else {
+                    showToast("error", "Error", "An error occurred. Please try again.");
+                }
+            },
+        });
+        }
+
+
     
     </script>
     
