@@ -116,20 +116,7 @@
                                 <a href="/admin/ticket/{{ data.id }}" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-transparent bg-green-300 text-green-800 hover:bg-green-400 focus:outline-none focus:bg-green-200 disabled:opacity-50 disabled:pointer-events-none">
                                     Detail
                                 </a>
-                                @component('components/ui/modal', {
-                                    title: 'Delete Ticket',
-                                    buttonClass: 'shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-transparent bg-red-300 text-red-800 hover:bg-red-400 focus:outline-none focus:bg-red-200 disabled:opacity-50 disabled:pointer-events-none',
-                                    })
-                                    @slot('header')
-                                        Delete
-                                    @end
-                                    @slot('content')
-                                    <div class="flex flex-col gap-y-2">
-                                        hapus ticket
-                                    </div>
-                    
-                                    @end
-                                @end
+                                <button type="button" onclick="deleteTicket({{ data.id }})" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-xs font-medium rounded-lg border border-transparent bg-red-300 text-red-800 hover:bg-red-400 focus:outline-none focus:bg-red-200 disabled:opacity-50 disabled:pointer-events-none">Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -145,7 +132,6 @@
 </div>
 
 <script>
-    const api = '{{ api }}'
     const token = '{{ token }}'
 
     $(document).ready(function () {
@@ -185,6 +171,34 @@
             });
         });
     });
+
+    function deleteTicket(id) {
+        $.ajax({
+            url: '{{ api }}/api/v1/tickets/' + id,
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            success: function (response) {
+                showToast("success", "Success", "Ticket deleted successfully!");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            },
+            error: function (xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorMessages = '';
+                    errors.forEach(error => {
+                        errorMessages += `${error.field}: ${error.message}\n`;
+                    });
+                    showToast("error", "Error", errorMessages);
+                } else {
+                    showToast("error", "Error", "An error occurred. Please try again.");
+                }
+            },
+        });
+    }
 </script>
 
 @endslot
