@@ -11,6 +11,9 @@ export const index = async (req, res, next) => {
             },
           });
         
+        const userData = usersResponse.data.data || [];
+        console.log({userData});
+        
         const data = {
             token : token,
             api : api,

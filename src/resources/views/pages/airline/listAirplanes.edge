@@ -55,7 +55,6 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>Price Per KM</th>
-                    <th>Total Flights</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -66,11 +65,48 @@
                         <td>{{ data.name }}</td>
                         <td>{{ data.type }}</td>
                         <td>{{ data.pricePerKm }}</td>
-                        <td>---</td>
-                        <td>
-                            <button type="button" class="shadow-md py-1 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none">
-                                Edit
-                              </button>
+                        <td class="">
+                            <div class="flex flex-row gap-x-2 justify-center">
+                                @component('components/ui/modal', {
+                                    title: 'Edit AirPlane',
+                                    buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-300 text-yellow-800 hover:bg-yellow-400 focus:outline-none focus:bg-yellow-200 disabled:opacity-50 disabled:pointer-events-none',
+                                    })
+                                    @slot('header')
+                                        Edit
+                                    @end
+                                    @slot('content')
+                                    <div class="flex flex-col gap-y-2">
+                                        <h1 class="text-sm text-gray-500">Edit Airplane</h1>
+                                        {{ data.id }}
+
+                                        <div class="flex flex-row gap-x-2">
+                                            {{--  <button type="button" onclick="editAirline({{ data.id }})" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-300 text-red-800 hover:bg-red-400 focus:outline-none focus:bg-red-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Delete</button>  --}}
+                                            <button type="button" @click="modalOpen=false" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Cancel</button>
+                                        </div>
+                                    </div>
+                                    
+                                    @end
+                                @end
+                                @component('components/ui/modal', {
+                                    title: 'Delete AirPlane',
+                                    buttonClass: 'shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-300 text-red-800 hover:bg-red-400 focus:outline-none focus:bg-red-200 disabled:opacity-50 disabled:pointer-events-none',
+                                    })
+                                    @slot('header')
+                                        Delete
+                                    @end
+                                    @slot('content')
+                                    <div class="flex flex-col gap-y-2">
+                                        <h1 class="text-sm text-gray-500">Are you sure you want to delete this Airplane?</h1>
+
+                                        <div class="flex flex-row gap-x-2">
+                                            <button type="button" onclick="deleteAirplane({{ data.id }})" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-red-300 text-red-800 hover:bg-red-400 focus:outline-none focus:bg-red-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Delete</button>
+                                            <button type="button" @click="modalOpen=false" class="shadow-md py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-300 text-blue-800 hover:bg-blue-400 focus:outline-none focus:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none text-center w-full justify-center">Cancel</button>
+                                        </div>
+                                    </div>
+                                    
+                                    @end
+                                @end
+                            </div>
                         </td>
                     </tr>
                 @end
@@ -133,6 +169,34 @@
             });
         });
     });
+
+    function deleteAirplane(id) {
+        $.ajax({
+            url: '{{ api }}/api/v1/airplanes/' + id,
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            success: function (response) {
+                showToast("success", "Success", "Airplane deleted successfully!");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            },
+            error: function (xhr) {
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    const errors = xhr.responseJSON.errors;
+                    let errorMessages = '';
+                    errors.forEach(error => {
+                        errorMessages += `${error.field}: ${error.message}\n`;
+                    });
+                    showToast("error", "Error", errorMessages);
+                } else {
+                    showToast("error", "Error", "An error occurred. Please try again.");
+                }
+            },
+        });
+    }
 
 </script>
 

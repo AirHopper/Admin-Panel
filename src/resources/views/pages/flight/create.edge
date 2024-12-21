@@ -67,6 +67,7 @@
                             <option value="First_Class">First_Class</option>
                         @end
                     @end
+                    <span class="text-xs text-green-700">Can Multiple Selection Class</span>
                 </div>
             </div>
 
@@ -175,8 +176,8 @@
             const formData = {
                 routeId: parseInt($('#routeId').val()),
                 airplaneId: parseInt($('#airplaneId').val()),
-                departureTime: formatToISOString($('#departureTime').val()),
-                arrivalTime: formatToISOString($('#arrivalTime').val()),
+                departureTime: formatToISOString($('#departureTime').val(), 7),
+                arrivalTime: formatToISOString($('#arrivalTime').val(), 7),
                 class: $('#classId').val(),
                 isActive: true,
                 baggage: parseInt($('#baggage').val()) || 20, // Default ke 20 jika kosong
@@ -184,7 +185,7 @@
                 entertainment: $('#entertainment').is(':checked'),
                 departureTerminalId: parseInt($('#departureTerminalId').val()),
                 arrivalTerminalId: parseInt($('#arrivalTerminalId').val()),
-                discountId: $('#discountId').val() || null,
+                discountId: parseInt($('#discountId').val()) || null,
             };
 
             console.log("Form Data:", formData);
@@ -222,10 +223,12 @@
         });
 
         // Format waktu ke ISO string
-        function formatToISOString(dateTime) {
+        function formatToISOString(dateTime, hoursToAdd) {
             const date = new Date(dateTime);
+            date.setHours(date.getHours() + hoursToAdd);
             return date.toISOString();
         }
+
     });
 
     </script>

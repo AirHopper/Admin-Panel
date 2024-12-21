@@ -10,7 +10,7 @@ const formatRupiah = (value) => {
 export const index = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
-    const token = req.cookies.token;
+    const {token} = req;
 
     const tiketResponse = await axios.get(`${api}/api/v1/tickets?limit=999999`);  
     const airPortResponse = await axios.get(`${api}/api/v1/airports`);
