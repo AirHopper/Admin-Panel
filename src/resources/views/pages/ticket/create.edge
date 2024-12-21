@@ -57,8 +57,22 @@
     <div id="selectedFlights" class="flex flex-col gap-2 w-full justify-center items-center hidden rounded-lg border-2 border-gray-300 px-4 py-2 shadow-md">
         <h2 class="font-bold">Selected Flights:</h2>
         <div class="flex flex-row gap-x-2 w-full justify-center items-center">
-            <div id="firstFlightDisplay" class="flex flex-col gap-y-2 w-full justify-center items-center font-bold"></div>
-            <div id="secondFlightDisplay" class="flex flex-col gap-y-2 w-full justify-center items-center font-bold"></div>
+            <div class="flex flex-col gap-y-2 w-full justify-center items-center font-bold">
+                <div id="firstFlightDisplay" class="flex flex-col gap-y-2 w-full justify-center items-center font-bold"></div>
+                {{--  Route  --}}
+                <div class="flex flex-row gap-x-2 w-full justify-center items-center font-bold">
+                    <h1 class="font-bold" id="departureFirstFlightDisplay"></h1> -
+                    <h1 class="font-bold bg-yellow-300 rounded-sm px-2 py-1" id="arrivalFirstFlightDisplay"></h1>
+                </div>
+            </div>
+            <div class="flex flex-col gap-y-2 w-full justify-center items-center font-bold">
+                <div id="secondFlightDisplay" class="flex flex-col gap-y-2 w-full justify-center items-center font-bold"></div>
+                {{--  Route  --}}
+                <div class="flex flex-row  gap-x-2 w-full justify-center items-center font-bold">
+                    <h1 class="font-bold bg-yellow-300 rounded-sm px-2 py-1" id="departureSecondFlightDisplay"></h1> -
+                    <h1 class="font-bold" id="arrivalSecondFlightDisplay"></h1>
+                </div>
+            </div>
             <div class="w-full hidden" id="discountDropdown">
                 <select id="discountId" name="discountId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3">
                     <option value="">No Discount</option>
@@ -87,7 +101,10 @@
                                     <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
                                     <div class="flex flex-col">
                                         <div>
-                                            {{ data.airline.name }} ( {{ data.departure.city.name }} - {{ data.arrival.city.name }} ) 
+                                            {{ data.airline.name }} ( 
+                                                <span id="departureFirstFlight">{{ data.departure.city.name }}</span> 
+                                                - 
+                                                <span class="font-bold underline" id="arrivalFirstFlight">{{ data.arrival.city.name }}</span> ) 
                                         </div>
                                         <div>
                                             {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }} 
@@ -107,7 +124,7 @@
                                     <div class="flex flex-col gap-y-2 justify-center items-center">
                                         <h1>{{ data.id }}</h1>
                                         <div class="flex">
-                                            <input type="radio" name="firstFlight" id="firstFlight{{ data.id }}" value="{{ data.id }}" onclick="updateSelection('first', '{{ data.id }}')">
+                                            <input type="radio" name="firstFlight" id="firstFlight{{ data.id }}" value="{{ data.id }}" onclick="updateSelection('first', '{{ data.id }}', '{{ data.departure.city.name }}', '{{ data.arrival.city.name }}')">
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +148,10 @@
                                         <img src="{{ data.airline.imageUrl }}" alt="{{ data.airline.name }}" class="h-10">
                                         <div class="flex flex-col">
                                             <div>
-                                                {{ data.airline.name }} ( {{ data.departure.city.name }} - {{ data.arrival.city.name }} ) 
+                                                {{ data.airline.name }} ( 
+                                                    <span class="font-bold underline" id="departureSecondFlight">{{ data.departure.city.name }}</span>
+                                                     - 
+                                                     <span class="font-bold underline" id="arrivalSecondFlight">{{ data.arrival.city.name }}</span> ) 
                                             </div>
                                             <div>
                                                 {{ new Date(data.departure.time).toISOString().split('T')[1].slice(0, 8) }} - {{ new Date(data.arrival.time).toISOString().split('T')[1].slice(0, 8) }}
@@ -151,7 +171,7 @@
                                     <div class="flex flex-col gap-y-2 justify-center items-center">
                                         <h1>{{ data.id }}</h1>
                                         <div class="flex">
-                                            <input type="radio" name="secondFlight" id="secondFlight{{ data.id }}" value="{{ data.id }}" onclick="updateSelection('second', '{{ data.id }}')">
+                                            <input type="radio" name="secondFlight" id="secondFlight{{ data.id }}" value="{{ data.id }}" onclick="updateSelection('second', '{{ data.id }}', '{{ data.departure.city.name }}', '{{ data.arrival.city.name }}')">
                                         </div>
                                     </div>
                                 </div>
@@ -182,56 +202,75 @@
     const token = '{{ token }}';
     let firstFlightId = null;
     let secondFlightId = null;
+    let departureFirstFlight = null;
+    let arrivalFirstFlight = null;
+    let departureSecondFlight = null;
+    let arrivalSecondFlight = null;
+
 
     // Update selection in real-time
-    function updateSelection(type, id) {
+    function updateSelection(type, id, departure, arrival) {
         if (type === 'first') {
             firstFlightId = id;
+            firstFlightDeparture = departure;   
+            firstFlightArrival = arrival;
+
             document.getElementById('firstFlightDisplay').innerText = `First Flight ID: ${firstFlightId}`;
+            document.getElementById('departureFirstFlightDisplay').innerText = firstFlightDeparture;
+            document.getElementById('arrivalFirstFlightDisplay').innerText = firstFlightArrival;
+
         } else if (type === 'second') {
             secondFlightId = id;
+            secondFlightDeparture = departure;
+            secondFlightArrival = arrival;
+
             document.getElementById('secondFlightDisplay').innerText = `Second Flight ID: ${secondFlightId}`;
+            document.getElementById('departureSecondFlightDisplay').innerText = secondFlightDeparture;
+            document.getElementById('arrivalSecondFlightDisplay').innerText = secondFlightArrival;
+
         }
     }
 
     // Lock selection
     function lockSelection() {
         if (!firstFlightId || !secondFlightId) {
-            alert('Please select one flight for both First and Second.');
+            showToast("error", "Validation Error", "Please select both First and Second flights.");
             return;
         }
 
-        // Show Selected Flights Section
+        if(firstFlightArrival != secondFlightDeparture) {
+            showToast("error", "Validation Error", "Departure for First Flight and Arrival for Second Flight must be the same.");
+            return;
+        }
+
         document.getElementById('selectedFlights').classList.remove('hidden');
 
-        // Show Discount Dropdown and Create Button
         document.getElementById('discountDropdown').classList.remove('hidden');
         document.getElementById('createButton').classList.remove('hidden');
     }
 
     // Create Ticket
     function createTicket() {
-        // Ambil nilai flight ID dari radio button yang dipilih
         const firstFlightId = document.querySelector('input[name="firstFlight"]:checked')?.value;
         const secondFlightId = document.querySelector('input[name="secondFlight"]:checked')?.value;
 
         if (!firstFlightId || !secondFlightId) {
-            alert('Please select one flight for both First and Second.');
+            showToast("error", "Validation Error", "Please select both First and Second flights.");
             return;
         }
 
-        // Ambil nilai discount ID dari dropdown
+        if(firstFlightArrival != secondFlightDeparture) {
+            showToast("error", "Validation Error", "Departure for First Flight and Arrival for Second Flight must be the same.");
+            return;
+        }
+
         const discountIdValue = document.getElementById('discountId')?.value;
 
-        // Siapkan payload data
         const formData = {
-            routeId: routeId, // Ganti dengan routeId yang sesuai
+            routeId: routeId,
             flightIds: [parseInt(firstFlightId), parseInt(secondFlightId)],
-            ...(discountIdValue ? { discountId: parseInt(discountIdValue) } : {}) // Opsional
+            ...(discountIdValue ? { discountId: parseInt(discountIdValue) } : {})
         };
-
-        console.log(token);
-        console.log('Payload Data:', formData); // Debug log untuk memastikan format data benar
 
         $.ajax({
                 url: '{{ api }}/api/v1/tickets',
@@ -258,7 +297,6 @@
                     }
                 },
                 error: function (xhr) {
-                    // Tangani kesalahan respons lainnya
                     const errorMessage = xhr.responseJSON?.message || `Error ${xhr.status}: ${xhr.statusText}`;
                     showToast("error", "Error", errorMessage);
                 }
