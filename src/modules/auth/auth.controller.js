@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const loginPage = async ( res, next) => {
+export const loginPage = async (req, res, next) => {
   try {
     const api = process.env.API_URL;
 
