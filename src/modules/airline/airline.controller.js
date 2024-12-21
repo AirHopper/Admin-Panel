@@ -28,7 +28,7 @@ export const listAirplanes = async (req, res, next) => {
     const { token } = req;
 
     const airlinesResponse = await axios.get(`${api}/api/v1/airlines/${code}`);
-
+    
     const data = {
       api: api,
       token: token,
