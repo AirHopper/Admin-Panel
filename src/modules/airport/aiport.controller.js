@@ -29,14 +29,13 @@ export const terminal = async (req, res, next) => {
     const { token } = req;
     
     const detailAirportResponse = await axios.get(`${api}/api/v1/airports/${code}`);
-    const terminalsResponse = await axios.get(`${api}/api/v1/terminals`);
 
     const data = {
       api: api,
       code: code,
       token: token,
       airport: detailAirportResponse.data.data,
-      terminals: terminalsResponse.data.data || [],
+      terminals: detailAirportResponse.data.data.Terminals,
     };
 
 
