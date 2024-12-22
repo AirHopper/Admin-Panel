@@ -74,6 +74,7 @@ export const create = async (req, res, next) => {
       terminals: terminalsResponse.data.data || [],
       discounts: discountsResponse.data.data || [],
     };
+    
 
     res.edge("pages/flight/create", data);
   } catch (error) {

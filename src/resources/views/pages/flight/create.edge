@@ -23,9 +23,9 @@
                             <option value="">Choose</option>
                             @each(data in routes)
                                 <option value="{{ data.id }}" class="flex flex-col">
-                                    <span class="text-sm">{{ data.DepartureAirport.name }} ({{ data.DepartureAirport.City.name }})</span>
+                                    <span class="text-sm">{{ data.DepartureAirport.name }} ({{ data.DepartureAirport.City.name }} - {{ data.DepartureAirport.City.code }})</span>
                                     <span class="text-sm"> - </span>
-                                    <span class="text-sm">{{ data.ArrivalAirport.name }} ({{ data.ArrivalAirport.City.name }})</span>
+                                    <span class="text-sm">{{ data.ArrivalAirport.name }} ({{ data.ArrivalAirport.City.name }} - {{ data.ArrivalAirport.City.code }})</span>
                                 </option>
                             @end
                         @end
