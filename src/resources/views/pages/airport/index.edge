@@ -68,6 +68,8 @@
                     <th>Type</th>
                     <th>City</th>
                     <th>Country</th>
+                    <th>Continent</th>
+                    <th>Total Terminal</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -80,6 +82,8 @@
                         <td>{{ airport.type }}</td>
                         <td>{{ airport.City ? airport.City.name : '-' }}</td>
                         <td>{{ airport.City ? airport.City.country : '-' }}</td>
+                        <td>{{ airport.City ? airport.City.continent : '-' }}</td>
+                        <td>{{ airport._count.Terminals }}</td>
                         <td>
                             <div class="flex flex-row gap-x-2">
                                 @component('components/ui/modal', {
