@@ -50,8 +50,7 @@
                 <h1 class="font-bold">{{ route.ArrivalAirport.City.name }}</h1>
             </div>
         </div>
-    </div>
-    
+    </div>   
 
     {{-- Selected Flights Display --}}
     <div id="selectedFlights" class="flex flex-col gap-2 w-full justify-center items-center hidden rounded-lg border-2 border-gray-300 px-4 py-2 shadow-md">
@@ -115,7 +114,7 @@
                                                 <span class="bg-blue-300 rounded-full text-sm px-2 py-1 shadow-md">{{ data.class }}</span>
                                             @elseif(data.class == 'Business')
                                                 <span class="bg-red-300 rounded-full text-sm px-2 py-1 shadow-md">{{ data.class }}</span>
-                                            @elseif(data.class == 'First Class')
+                                            @elseif(data.class == 'First_Class')
                                                 <span class="bg-purple-300 rounded-full text-sm px-2 py-1 shadow-md">{{ data.class }}</span>
                                             @endif
                                         </div>
@@ -162,7 +161,7 @@
                                                     <span class="bg-blue-300 rounded-full text-sm px-2 py-1 shadow-md">{{ data.class }}</span>
                                                 @elseif(data.class == 'Business')
                                                     <span class="bg-red-300 rounded-full text-sm px-2 py-1 shadow-md">{{ data.class }}</span>
-                                                @elseif(data.class == 'First Class')
+                                                @elseif(data.class == 'First_Class')
                                                     <span class="bg-purple-300 rounded-full text-sm px-2 py-1 shadow-md">{{ data.class }}</span>
                                                 @endif
                                             </div>
