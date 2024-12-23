@@ -11,6 +11,7 @@ export const index = async (req, res, next) => {
         const airplanes = await axios.get(`${api}/api/v1/airplanes`);
         const flights = await axios.get(`${api}/api/v1/flights`);
         const tickets = await axios.get(`${api}/api/v1/tickets`);  
+        const routes = await axios.get(`${api}/api/v1/routes`);
         const users = await axios.get(`${api}/api/v1/users`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -24,6 +25,7 @@ export const index = async (req, res, next) => {
             totalAirplanes : airplanes.data.data.length,
             totalFlights : flights.data.data.length,
             totalTickets : tickets.data.data.length,
+            totalRoutes : routes.data.data.length,
             totalUsers : users.data.data.length,
         }
 
